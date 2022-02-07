@@ -33,3 +33,12 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# libs
+.adminjs
+
+# postgres data
+pgdata
+
+# config
+.env*

@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: postgres-prod
+    image: postgres
+    environment:
+      - POSTGRES_USER=app
+      - "POSTGRES_PASSWORD=sdfouh2389334osdkjdf"
+      - POSTGRES_DB=main
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  server:
+    container_name: server-prod
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
