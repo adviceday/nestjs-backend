@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormFactory } from './config/typeorm.factory';
 import { AdminModule } from '@adminjs/nestjs';
+import { adminjsFactory } from './config/adminjs.factory';
 
 @Module({
   imports: [
@@ -15,20 +16,10 @@ import { AdminModule } from '@adminjs/nestjs';
       inject: [ConfigService],
       useFactory: typeormFactory,
     }),
-    AdminModule.createAdmin({
-      adminJsOptions: {
-        rootPath: '/admin',
-        resources: [],
-      },
-      auth: {
-        authenticate(email, password) {
-          if (email === 'root@admin.com' && password === 'sodlfjk') {
-            return Promise.resolve({ email, password });
-          }
-        },
-        cookieName: 'adviceday-admin',
-        cookiePassword: 'sdlkfjl',
-      },
+    AdminModule.createAdminAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: adminjsFactory,
     }),
   ],
 })
