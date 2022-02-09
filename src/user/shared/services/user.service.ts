@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { hash } from 'bcrypt';
@@ -23,7 +28,7 @@ export class UserService {
    * @param userDto - user credentials with authMethod
    */
   public async addUser(userDto: AddUserDto): Promise<User> {
-    const exist = await this.isUserExists({ email: userDto.email });
+    const exist = await this.findOne({ email: userDto.email });
     if (exist) {
       throw new ConflictException('User with this email already exits');
     }
@@ -32,6 +37,34 @@ export class UserService {
     user.email = userDto.email;
     user.authMethod = userDto.authMethod;
     user.hashedPassword = await this.hashData(userDto.password);
+
+    return user.save();
+  }
+
+  /**
+   * Update password of selected user
+   * checks if old password is correct
+   *
+   * @param userId - id of user which update
+   * @param oldPassword - old password of updated user
+   * @param newPassword - new password for updated user
+   */
+  public async updatePassword(
+    userId: string,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<User> {
+    const user = await this.findOne({ id: userId });
+    if (!user) {
+      throw new NotFoundException('User is not exist');
+    }
+
+    const compareRes = await user.validatePassword(oldPassword);
+
+    if (!compareRes) {
+      throw new BadRequestException('Field oldPassword is incorrect');
+    }
+    user.hashedPassword = await this.hashData(newPassword);
 
     return user.save();
   }
@@ -80,19 +113,6 @@ export class UserService {
    */
   public findOne(user: Partial<User>): Promise<User> {
     return this.userRepository.findOne(user);
-  }
-
-  /**
-   * checks if user
-   * already exist in db of not
-   *
-   * @param userFields - user field
-   */
-  public async isUserExists(
-    userFields: Partial<User>,
-  ): Promise<boolean | never> {
-    const user = await this.userRepository.findOne(userFields);
-    return !!user;
   }
 
   /**

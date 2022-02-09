@@ -76,7 +76,7 @@ export class AuthService {
    * @param userId - it of user to logout
    */
   public async logout(userId: string): Promise<User> {
-    const exist = await this.userService.isUserExists({ id: userId });
+    const exist = await this.userService.findOne({ id: userId });
     if (!exist) {
       throw new NotFoundException('User is not found');
     }
