@@ -12,6 +12,7 @@ import { LocalSigninDto } from './dto/local-signin.dto';
 import { TokensResponse } from './types/tokens-response.type';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
+import { OkResponse } from '../types/ok-response.type';
 
 @Controller('auth')
 export class AuthController {
@@ -32,8 +33,9 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-access'))
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  async logout(@GetUser('sub') userId: string): Promise<void> {
+  async logout(@GetUser('sub') userId: string): Promise<OkResponse> {
     await this.authService.logout(userId);
+    return { message: 'ok' };
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))
