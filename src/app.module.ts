@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormFactory } from './config/typeorm.factory';
 import { AdminModule } from '@adminjs/nestjs';
 import { adminjsFactory } from './config/adminjs.factory';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { adminjsFactory } from './config/adminjs.factory';
       inject: [ConfigService],
       useFactory: adminjsFactory,
     }),
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}
