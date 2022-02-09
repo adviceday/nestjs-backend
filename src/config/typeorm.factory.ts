@@ -12,4 +12,5 @@ export const typeormFactory = (
   port: config.get('POSTGRES_PORT'),
   host: config.get('POSTGRES_HOST'),
   synchronize: true,
+  entities: [__dirname + '/../**/*.entity.js'],
 });

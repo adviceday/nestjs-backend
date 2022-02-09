@@ -1,10 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { Env } from './env.interface';
+import { User } from '../user/entities/user.entity';
 
 export const adminjsFactory = (config: ConfigService<Env>) => ({
   adminJsOptions: {
     rootPath: '/admin',
-    resources: [],
+    resources: [User],
   },
   auth: {
     authenticate(email, password) {

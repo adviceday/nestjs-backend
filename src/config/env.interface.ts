@@ -8,4 +8,7 @@ export interface Env {
   ADMINJS_ROOT_USER: string;
   ADMINJS_ROOT_PASSWORD: string;
   ADMINJS_COOKIE_PASSWORD: string;
+
+  JWT_SECRET: string;
+  JWT_REFRESH_SECRET: string;
 }
