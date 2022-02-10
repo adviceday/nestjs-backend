@@ -1,6 +1,15 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { compare } from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
+import { Settings } from '../../settings/entities/settings.entity';
 
 export type authMethod = 'local';
 
@@ -23,6 +32,15 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   hashedRefreshToken?: string;
+
+  @OneToOne(() => Settings, (settings) => settings.id, {
+    cascade: true,
+  })
+  @JoinColumn()
+  settings: Settings;
+
+  @RelationId((user: User) => user.settings)
+  settingsId: string;
 
   /**
    * compare password with its hash stored in user record

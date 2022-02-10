@@ -6,6 +6,7 @@ import { AdminModule } from '@adminjs/nestjs';
 import { adminjsFactory } from './config/adminjs.factory';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    SettingsModule,
   ],
 })
 export class AppModule {}

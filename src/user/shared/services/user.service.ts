@@ -10,6 +10,7 @@ import { hash } from 'bcrypt';
 import { AddUserDto } from '../../dto/add-user.dto';
 import { User } from '../../entities/user.entity';
 import { IsNull, Not } from 'typeorm';
+import { Settings } from '../../../settings/entities/settings.entity';
 
 @Injectable()
 /**
@@ -28,7 +29,7 @@ export class UserService {
    * @param userDto - user credentials with authMethod
    */
   public async addUser(userDto: AddUserDto): Promise<User> {
-    const exist = await this.findOne({ email: userDto.email });
+    const exist = await this.userRepository.findOne({ email: userDto.email });
     if (exist) {
       throw new ConflictException('User with this email already exits');
     }
@@ -37,6 +38,11 @@ export class UserService {
     user.email = userDto.email;
     user.authMethod = userDto.authMethod;
     user.hashedPassword = await this.hashData(userDto.password);
+
+    const settings = new Settings();
+    settings.lang = 'ru';
+
+    user.settings = settings;
 
     return user.save();
   }
@@ -55,10 +61,6 @@ export class UserService {
     newPassword: string,
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
-    if (!user) {
-      throw new NotFoundException('User is not exist');
-    }
-
     const compareRes = await user.validatePassword(oldPassword);
 
     if (!compareRes) {
@@ -109,10 +111,15 @@ export class UserService {
   /**
    * Finding user
    *
-   * @param user - user params
+   * @param userFields - user params
    */
-  public findOne(user: Partial<User>): Promise<User> {
-    return this.userRepository.findOne(user);
+  public async findOne(userFields: Partial<User>): Promise<User> {
+    const user = await this.userRepository.findOne(userFields);
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    return user;
   }
 
   /**
