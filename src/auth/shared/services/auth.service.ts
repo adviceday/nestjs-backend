@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TokensResponse } from '../../types/tokens-response.type';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -54,10 +50,6 @@ export class AuthService {
    */
   public async signin(dto: LocalSigninDto): Promise<TokensResponse> {
     const user = await this.userService.findOne({ email: dto.email });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
     const isRightPass = await user.validatePassword(dto.password);
 
     if (!isRightPass) {
@@ -76,11 +68,7 @@ export class AuthService {
    * @param userId - it of user to logout
    */
   public async logout(userId: string): Promise<User> {
-    const exist = await this.userService.findOne({ id: userId });
-    if (!exist) {
-      throw new NotFoundException('User is not found');
-    }
-
+    await this.userService.findOne({ id: userId });
     return this.userService.removeRefreshToken(userId);
   }
 
