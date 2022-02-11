@@ -14,6 +14,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { OkResponse } from '../types/ok-response.type';
 
+/**
+ * Search for documentation in postman
+ * @ignore
+ */
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

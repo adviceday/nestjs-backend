@@ -4,6 +4,9 @@ import { Database, Resource } from '@adminjs/typeorm';
 import AdminJS from 'adminjs';
 import { ValidationPipe } from '@nestjs/common';
 
+/**
+ * ignore
+ */
 async function bootstrap() {
   AdminJS.registerAdapter({ Database, Resource });
   const app = await NestFactory.create(AppModule);

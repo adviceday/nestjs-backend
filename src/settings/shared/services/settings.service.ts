@@ -3,11 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SettingsRepository } from '../repositories/settings.repository';
 import { Settings } from '../../entities/settings.entity';
 
-@Injectable()
 /**
  * Settings service
  */
+@Injectable()
 export class SettingsService {
+  /**
+   * Inject providers
+   *
+   * @param settingsRepository - repository to manipulate settings table
+   */
   constructor(
     @InjectRepository(SettingsRepository)
     private settingsRepository: SettingsRepository,
