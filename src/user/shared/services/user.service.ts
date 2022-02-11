@@ -12,11 +12,16 @@ import { User } from '../../entities/user.entity';
 import { IsNull, Not } from 'typeorm';
 import { Settings } from '../../../settings/entities/settings.entity';
 
-@Injectable()
 /**
  * User service
  */
+@Injectable()
 export class UserService {
+  /**
+   * Inject providers
+   *
+   * @param userRepository - repository to manipulate users table
+   */
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,

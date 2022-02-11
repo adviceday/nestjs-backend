@@ -12,6 +12,10 @@ import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { OkResponse } from '../types/ok-response.type';
 
+/**
+ * Search for documentation in postman
+ * @ignore
+ */
 @UseGuards(AuthGuard('jwt-access'))
 @Controller('user')
 export class UserController {

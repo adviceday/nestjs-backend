@@ -2,17 +2,24 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TokensResponse } from '../../types/tokens-response.type';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Env } from '../../../config/env.interface';
+import { Env } from '../../../config/env.type';
 import { UserService } from '../../../user/shared/services/user.service';
 import { LocalSignupDto } from '../../dto/local-signup.dto';
 import { LocalSigninDto } from '../../dto/local-signin.dto';
 import { User } from '../../../user/entities/user.entity';
 
-@Injectable()
 /**
  * Auth Service
  */
+@Injectable()
 export class AuthService {
+  /**
+   * Inject providers
+   *
+   * @param jwtService - to generate jwt tokens
+   * @param configService - to get variables from env file
+   * @param userService - to manipulate users
+   */
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService<Env>,
@@ -72,6 +79,13 @@ export class AuthService {
     return this.userService.removeRefreshToken(userId);
   }
 
+  /**
+   * Search for user in db
+   * validate his token and generate a new pair of tokens
+   *
+   * @param userId - id of user that request new tokens
+   * @param refreshToken - current refresh token of this user
+   */
   public async refreshAuth(
     userId: string,
     refreshToken: string,

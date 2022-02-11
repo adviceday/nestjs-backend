@@ -14,6 +14,10 @@ import { SettingsService } from './shared/services/settings.service';
 import { UserService } from '../user/shared/services/user.service';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
 
+/**
+ * Search for documentation in postman
+ * @ignore
+ */
 @UseGuards(AuthGuard('jwt-access'))
 @Controller('user/settings')
 export class SettingsController {
