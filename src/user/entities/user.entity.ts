@@ -92,4 +92,13 @@ export class User extends BaseEntity {
 
     return compare(refreshToken, this.hashedRefreshToken);
   }
+
+  /**
+   * Removes all fields
+   * that unused for client
+   */
+  public publicView(): void {
+    this.hashedPassword = undefined;
+    this.hashedRefreshToken = undefined;
+  }
 }

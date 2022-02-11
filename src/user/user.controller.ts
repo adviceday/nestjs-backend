@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Put,
@@ -11,6 +12,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { OkResponse } from '../types/ok-response.type';
+import { User } from './entities/user.entity';
 
 /**
  * Search for documentation in postman
@@ -34,5 +36,14 @@ export class UserController {
     );
 
     return { message: 'ok' };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('/current-user')
+  public async getUser(@GetUser('sub') userId: string): Promise<User> {
+    const user = await this.userService.findOne({ id: userId });
+
+    user.publicView();
+    return user;
   }
 }
