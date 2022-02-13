@@ -4,6 +4,7 @@ import { Env } from '../../config/env.type';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { JwtPayload } from '../types/jwt-payload.type';
+import { Request } from 'express';
 
 /**
  * Strategy to extract and validate refresh token from body
@@ -34,9 +35,10 @@ export class RefreshTokenStrategy extends PassportStrategy(
    * Set req.user in return statement
    * In this case don't use any transformations
    *
+   * @param _ - express request object
    * @param payload - extracted token info
    */
-  public validate(payload: JwtPayload) {
+  public validate(_: Request, payload: JwtPayload) {
     return payload;
   }
 }

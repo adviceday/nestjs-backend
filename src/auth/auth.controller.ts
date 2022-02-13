@@ -6,7 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './shared/services/auth.service';
+import { AuthService } from './services/auth.service';
 import { LocalSignupDto } from './dto/local-signup.dto';
 import { LocalSigninDto } from './dto/local-signin.dto';
 import { TokensResponse } from './types/tokens-response.type';
@@ -22,29 +22,29 @@ import { OkResponse } from '../types/ok-response.type';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.CREATED)
   @Post('/local/signup')
+  @HttpCode(HttpStatus.CREATED)
   async signupLocal(@Body() body: LocalSignupDto): Promise<TokensResponse> {
     return this.authService.signup(body);
   }
 
-  @HttpCode(HttpStatus.OK)
   @Post('/local/signin')
+  @HttpCode(HttpStatus.OK)
   async signingLocal(@Body() body: LocalSigninDto): Promise<TokensResponse> {
     return this.authService.signin(body);
   }
 
+  @Post('/logout')
   @UseGuards(AuthGuard('jwt-access'))
   @HttpCode(HttpStatus.OK)
-  @Post('/logout')
   async logout(@GetUser('sub') userId: string): Promise<OkResponse> {
     await this.authService.logout(userId);
     return { message: 'ok' };
   }
 
+  @Post('/refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
-  @Post('/refresh')
   async refreshToken(
     @GetUser('sub') userId: string,
     @Body('token') refreshToken: string,

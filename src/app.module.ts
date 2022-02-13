@@ -7,6 +7,7 @@ import { adminjsFactory } from './config/adminjs.factory';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SettingsModule } from './settings/settings.module';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SettingsModule } from './settings/settings.module';
     AuthModule,
     UserModule,
     SettingsModule,
+    RateModule,
   ],
 })
 export class AppModule {}

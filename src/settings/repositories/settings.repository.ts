@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Settings } from '../../entities/settings.entity';
+import { Settings } from '../entities/settings.entity';
 
 /**
  * Settings repository

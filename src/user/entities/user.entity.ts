@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   RelationId,
@@ -10,6 +11,7 @@ import {
 import { compare } from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 import { Settings } from '../../settings/entities/settings.entity';
+import { Rate } from '../../rate/entities/rate.entity';
 
 /**
  * Auth methods for
@@ -70,6 +72,19 @@ export class User extends BaseEntity {
    */
   @RelationId((user: User) => user.settings)
   settingsId: string;
+
+  /**
+   * The rate of user
+   */
+  @ManyToOne(() => Rate, (rate) => rate.id)
+  @JoinColumn()
+  rate: Rate;
+
+  /**
+   * ID of rate relation
+   */
+  @RelationId((user: User) => user.rate)
+  rateId: string;
 
   /**
    * compare password with its hash stored in user record
