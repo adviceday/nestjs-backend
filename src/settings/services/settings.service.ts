@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingsRepository } from '../repositories/settings.repository';
-import { Settings } from '../../entities/settings.entity';
+import { Settings } from '../entities/settings.entity';
 
 /**
  * Settings service

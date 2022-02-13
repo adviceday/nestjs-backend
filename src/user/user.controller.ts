@@ -7,7 +7,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './shared/services/user.service';
+import { UserService } from './services/user.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,13 +18,13 @@ import { User } from './entities/user.entity';
  * Search for documentation in postman
  * @ignore
  */
-@UseGuards(AuthGuard('jwt-access'))
 @Controller('user')
+@UseGuards(AuthGuard('jwt-access'))
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Put('/password/update')
+  @HttpCode(HttpStatus.OK)
   public async updatePassword(
     @Body() body: UpdatePasswordDto,
     @GetUser('sub') userId: string,
@@ -38,8 +38,8 @@ export class UserController {
     return { message: 'ok' };
   }
 
-  @HttpCode(HttpStatus.OK)
   @Get('/current-user')
+  @HttpCode(HttpStatus.OK)
   public async getUser(@GetUser('sub') userId: string): Promise<User> {
     const user = await this.userService.findOne({ id: userId });
 

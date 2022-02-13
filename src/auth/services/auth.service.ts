@@ -1,12 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { TokensResponse } from '../../types/tokens-response.type';
+import { TokensResponse } from '../types/tokens-response.type';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Env } from '../../../config/env.type';
-import { UserService } from '../../../user/shared/services/user.service';
-import { LocalSignupDto } from '../../dto/local-signup.dto';
-import { LocalSigninDto } from '../../dto/local-signin.dto';
-import { User } from '../../../user/entities/user.entity';
+import { Env } from '../../config/env.type';
+import { UserService } from '../../user/services/user.service';
+import { LocalSignupDto } from '../dto/local-signup.dto';
+import { LocalSigninDto } from '../dto/local-signin.dto';
+import { User } from '../../user/entities/user.entity';
 
 /**
  * Auth Service

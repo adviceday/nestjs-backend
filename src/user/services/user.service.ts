@@ -1,16 +1,19 @@
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { hash } from 'bcrypt';
-import { AddUserDto } from '../../dto/add-user.dto';
-import { User } from '../../entities/user.entity';
+import { AddUserDto } from '../dto/add-user.dto';
+import { User } from '../entities/user.entity';
 import { IsNull, Not } from 'typeorm';
-import { Settings } from '../../../settings/entities/settings.entity';
+import { Settings } from '../../settings/entities/settings.entity';
+import { RateService } from '../../rate/services/rate.service';
 
 /**
  * User service
@@ -20,11 +23,14 @@ export class UserService {
   /**
    * Inject providers
    *
-   * @param userRepository - repository to manipulate users table
+   * @param userRepository - to manipulate users table
+   * @param rateService - to get rate
    */
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @Inject(forwardRef(() => RateService))
+    private rateService: RateService,
   ) {}
 
   /**
@@ -48,6 +54,8 @@ export class UserService {
     settings.lang = 'ru';
 
     user.settings = settings;
+    user.rate = await this.rateService.getDefault();
+    console.log(user);
 
     return user.save();
   }

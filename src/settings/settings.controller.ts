@@ -10,24 +10,24 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { Settings } from './entities/settings.entity';
-import { SettingsService } from './shared/services/settings.service';
-import { UserService } from '../user/shared/services/user.service';
+import { SettingsService } from './services/settings.service';
+import { UserService } from '../user/services/user.service';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
 
 /**
  * Search for documentation in postman
  * @ignore
  */
-@UseGuards(AuthGuard('jwt-access'))
 @Controller('user/settings')
+@UseGuards(AuthGuard('jwt-access'))
 export class SettingsController {
   constructor(
     private settingsService: SettingsService,
     private userService: UserService,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
   @Get()
+  @HttpCode(HttpStatus.OK)
   public async getUserSettings(
     @GetUser('sub') userId: string,
   ): Promise<Settings> {
@@ -37,8 +37,8 @@ export class SettingsController {
     return this.settingsService.findOne({ id: settingsId });
   }
 
-  @HttpCode(HttpStatus.OK)
   @Put('/update')
+  @HttpCode(HttpStatus.OK)
   public async updateUserSettings(
     @GetUser('sub') userId: string,
     @Body() newSettings: UpdateSettingsDto,
