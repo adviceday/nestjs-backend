@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SettingsModule } from './settings/settings.module';
 import { RateModule } from './rate/rate.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -30,5 +31,6 @@ import { RateModule } from './rate/rate.module';
     SettingsModule,
     RateModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
