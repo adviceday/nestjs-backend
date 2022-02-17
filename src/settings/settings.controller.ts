@@ -28,13 +28,8 @@ export class SettingsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  public async getUserSettings(
-    @GetUser('sub') userId: string,
-  ): Promise<Settings> {
-    const user = await this.userService.findOne({ id: userId });
-    const settingsId = user.settingsId;
-
-    return this.settingsService.findOne({ id: settingsId });
+  public getUserSettings(@GetUser('sub') userId: string): Promise<Settings> {
+    return this.settingsService.getUserSettings(userId);
   }
 
   @Put('/update')

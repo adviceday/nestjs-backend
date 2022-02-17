@@ -1,5 +1,5 @@
 import { IsIn } from 'class-validator';
-import { settingsLang } from '../entities/settings.entity';
+import { lang } from '../../lang/types/lang.type';
 
 /**
  * Dto for updating settings
@@ -10,8 +10,8 @@ import { settingsLang } from '../entities/settings.entity';
 export class UpdateSettingsDto {
   /**
    * Lang of corresponding user
-   * @link settingsLang
+   * @link lang
    */
   @IsIn(['ru', 'en'])
-  lang?: settingsLang;
+  lang?: lang;
 }

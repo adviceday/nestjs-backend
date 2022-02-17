@@ -51,6 +51,11 @@ export class RateService {
     return rate;
   }
 
+  /**
+   * Finding rate for new user's
+   * it is marked with isDefault column
+   * must be only 1 record in table
+   */
   public getDefault(): Promise<Rate> {
     return this.findOne({ isDefault: true });
   }

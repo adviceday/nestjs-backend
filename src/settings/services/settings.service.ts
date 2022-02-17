@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingsRepository } from '../repositories/settings.repository';
 import { Settings } from '../entities/settings.entity';
+import { UserService } from '../../user/services/user.service';
 
 /**
  * Settings service
@@ -12,10 +13,12 @@ export class SettingsService {
    * Inject providers
    *
    * @param settingsRepository - repository to manipulate settings table
+   * @param userService - to fetch user
    */
   constructor(
     @InjectRepository(SettingsRepository)
     private settingsRepository: SettingsRepository,
+    private userService: UserService,
   ) {}
 
   /**
@@ -33,6 +36,16 @@ export class SettingsService {
     const mergedSettings = this.settingsRepository.merge(settings, newSettings);
 
     return mergedSettings.save();
+  }
+
+  /**
+   * Returns settings object based on id of owner
+   *
+   * @param userId - id of user
+   */
+  public async getUserSettings(userId: string): Promise<Settings> {
+    const { settingsId } = await this.userService.findOne({ id: userId });
+    return this.findOne({ id: settingsId });
   }
 
   /**

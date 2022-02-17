@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export type settingsLang = 'en' | 'ru';
+import { lang } from '../../lang/types/lang.type';
 
 /**
  * User settings
@@ -17,5 +16,5 @@ export class Settings extends BaseEntity {
    * Lang of corresponding user
    */
   @Column()
-  lang: settingsLang;
+  lang: lang;
 }

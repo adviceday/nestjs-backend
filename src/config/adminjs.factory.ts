@@ -3,6 +3,39 @@ import { Env } from './env.type';
 import { User } from '../user/entities/user.entity';
 import { Settings } from '../settings/entities/settings.entity';
 import { Rate } from '../rate/entities/rate.entity';
+import { Category } from '../category/entities/category.entity';
+import { AdminModuleOptions } from '@adminjs/nestjs';
+
+/**
+ * The list of resources and their options
+ */
+const resources: any[] = [
+  { resource: User, options: { listProperties: ['authMethod', 'email'] } },
+  { resource: Settings, options: { listProperties: ['lang'] } },
+  {
+    resource: Rate,
+    options: {
+      listProperties: [
+        'name',
+        'isDefault',
+        'maxCategories',
+        'maxAdvicePerDay',
+        'pricePerMonthUSD',
+      ],
+    },
+  },
+  {
+    resource: Category,
+    options: {
+      sort: {
+        sortBy: 'id',
+        direction: 'asc',
+      },
+      properties: { name: { type: 'textarea' } },
+      listProperties: ['name', 'parentId'],
+    },
+  },
+];
 
 /**
  * configure admin panel
@@ -11,10 +44,12 @@ import { Rate } from '../rate/entities/rate.entity';
  * @link AuthModule
  * @param config - to get variables from .env file
  */
-export const adminjsFactory = (config: ConfigService<Env>) => ({
+export const adminjsFactory = (
+  config: ConfigService<Env>,
+): AdminModuleOptions => ({
   adminJsOptions: {
     rootPath: '/admin',
-    resources: [User, Settings, Rate],
+    resources,
   },
   auth: {
     authenticate(email, password) {
