@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { SettingsModule } from './settings/settings.module';
 import { RateModule } from './rate/rate.module';
 import { AppController } from './app.controller';
+import { CategoryModule } from './category/category.module';
+import { LangModule } from './lang/lang.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { AppController } from './app.controller';
     UserModule,
     SettingsModule,
     RateModule,
+    CategoryModule,
+    LangModule,
   ],
   controllers: [AppController],
 })
