@@ -23,7 +23,7 @@ export class CategoryService {
    * Fetch all categories that don't have parents
    */
   public topCategories(): Promise<Category[]> {
-    return this.categoryRepository.find({ isParent: true });
+    return this.categoryRepository.find({ level: 1 });
   }
 
   /**
@@ -59,7 +59,7 @@ export class CategoryService {
       id: categoryId,
     });
 
-    if (currentNode.level > depth || !currentNode) {
+    if (1 >= depth || !currentNode) {
       return {
         node: currentNode,
         children: [],
