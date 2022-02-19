@@ -28,8 +28,9 @@ export class Category extends BaseEntity {
    * True means that category
    * has no parent category
    */
-  @Column({ default: false })
-  isParent: boolean;
+  get isParent(): boolean {
+    return this.level === 1;
+  }
 
   /**
    * Stores id of parent category
