@@ -13,6 +13,9 @@ import { GetUser } from '../user/decorators/get-user.decorator';
 import { Advice } from './entities/advice.entity';
 import { Translate } from '../lang/decorators/translate.decorator';
 
+/**
+ * @ignore
+ */
 @Controller('advice')
 @UseGuards(AuthGuard('jwt-access'))
 export class AdviceController {

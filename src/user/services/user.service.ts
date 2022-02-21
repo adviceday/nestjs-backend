@@ -152,39 +152,22 @@ export class UserService {
   }
 
   /**
-   * Finding user and all fav advices
-   *
-   * @param userFields - user params
-   */
-  public async findWithAdvices(userFields: Partial<User>): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: userFields,
-      relations: ['favoriteAdvices', 'adviceHistory'],
-    });
-    if (!user) {
-      throw new NotFoundException('User is not found');
-    }
-
-    return user;
-  }
-
-  /**
    * add many-to-many relation record of user entity
    * @param userId - id of user to add relation
    * @param relationKey - field which contain relation
-   * @param relationObject - relation object itself
+   * @param relationId - id of related object
    */
   public async addManyToMany(
     userId: string,
     relationKey: keyof User,
-    relationObject: object,
+    relationId: string,
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
     await this.userRepository
       .createQueryBuilder()
       .relation(User, relationKey)
       .of(user)
-      .add(relationObject);
+      .add(relationId);
 
     return user;
   }
@@ -193,19 +176,19 @@ export class UserService {
    * remove many-to-many relation record of user entity
    * @param userId - id of user to add relation
    * @param relationKey - field which contain relation
-   * @param relationObject - relation object itself
+   * @param relationId - id of related object
    */
   public async removeManyToMany(
     userId: string,
     relationKey: keyof User,
-    relationObject: object,
+    relationId: string,
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
     await this.userRepository
       .createQueryBuilder()
       .relation(User, relationKey)
       .of(user)
-      .remove(relationObject);
+      .remove(relationId);
 
     return user;
   }
