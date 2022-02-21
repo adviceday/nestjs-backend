@@ -55,7 +55,6 @@ export class UserService {
 
     user.settings = settings;
     user.rate = await this.rateService.getDefault();
-    console.log(user);
 
     return user.save();
   }
@@ -144,6 +143,23 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: userFields,
       relations: ['subscribedCategories'],
+    });
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    return user;
+  }
+
+  /**
+   * Finding user and all fav advices
+   *
+   * @param userFields - user params
+   */
+  public async findWithAdvices(userFields: Partial<User>): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: userFields,
+      relations: ['favoriteAdvices'],
     });
     if (!user) {
       throw new NotFoundException('User is not found');
