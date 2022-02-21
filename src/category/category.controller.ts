@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -45,7 +46,7 @@ export class CategoryController {
   @Translate('tree', ['name'])
   @HttpCode(HttpStatus.OK)
   public getTree(
-    @Param('id') categoryId: string,
+    @Param('id', ParseUUIDPipe) categoryId: string,
     @Query('depth', new DefaultValuePipe(999), ParseIntPipe) depth: number,
   ): Promise<Tree<Category>> {
     return this.categoryService.categoryTree(categoryId, depth);
@@ -56,7 +57,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   public subscribe(
     @GetUser('sub') userId: string,
-    @Param('id') categoryId: string,
+    @Param('id', ParseUUIDPipe) categoryId: string,
   ): Promise<Category> {
     return this.categoryService.subscribe(userId, categoryId);
   }
@@ -66,7 +67,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   public unsubscribe(
     @GetUser('sub') userId: string,
-    @Param('id') categoryId: string,
+    @Param('id', ParseUUIDPipe) categoryId: string,
   ): Promise<Category> {
     return this.categoryService.unsubscribe(userId, categoryId);
   }

@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { lang } from '../../lang/types/lang.type';
 import { User } from '../../user/entities/user.entity';
+import { Advice } from '../../advice/entities/advice.entity';
 
 /**
  * Category entity
@@ -38,12 +39,10 @@ export class Category extends BaseEntity {
   subscribers: User[];
 
   /**
-   * True means that category
-   * has no parent category
+   * All advices that are in the category
    */
-  get isParent(): boolean {
-    return this.level === 1;
-  }
+  @ManyToMany(() => Advice, (advice) => advice.categories)
+  advices: Advice[];
 
   /**
    * Stores id of parent category
@@ -51,7 +50,11 @@ export class Category extends BaseEntity {
   @Column({ nullable: true })
   parentId?: string;
 
-  public applyLang(lang: lang): void {
-    this.name = this.name[lang];
+  /**
+   * True means that category
+   * has no parent category
+   */
+  get isParent(): boolean {
+    return this.level === 1;
   }
 }

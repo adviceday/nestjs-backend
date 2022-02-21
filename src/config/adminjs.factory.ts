@@ -5,6 +5,8 @@ import { Settings } from '../settings/entities/settings.entity';
 import { Rate } from '../rate/entities/rate.entity';
 import { Category } from '../category/entities/category.entity';
 import { AdminModuleOptions } from '@adminjs/nestjs';
+import { Advice } from '../advice/entities/advice.entity';
+import { AdviceAuthor } from '../advice/entities/advice-author.entity';
 
 /**
  * The list of resources and their options
@@ -34,6 +36,17 @@ const resources: any[] = [
       properties: { name: { type: 'textarea' } },
       listProperties: ['name', 'parentId'],
     },
+  },
+  {
+    resource: Advice,
+    options: {
+      properties: { text: { type: 'textarea' } },
+      listProperties: ['text', 'originLink'],
+    },
+  },
+  {
+    resource: AdviceAuthor,
+    options: { properties: { name: { type: 'textarea' } } },
   },
 ];
 

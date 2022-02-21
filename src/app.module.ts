@@ -11,6 +11,7 @@ import { RateModule } from './rate/rate.module';
 import { AppController } from './app.controller';
 import { CategoryModule } from './category/category.module';
 import { LangModule } from './lang/lang.module';
+import { AdviceModule } from './advice/advice.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LangModule } from './lang/lang.module';
     RateModule,
     CategoryModule,
     LangModule,
+    AdviceModule,
   ],
   controllers: [AppController],
 })
