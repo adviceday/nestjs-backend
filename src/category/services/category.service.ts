@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryRepository } from '../repositories/category.repository';
 import { Category } from '../entities/category.entity';
 import { Tree } from '../../types/tree.type';
+import { UserService } from '../../user/services/user.service';
 
 /**
  * Service to manipulate categories
@@ -12,11 +13,13 @@ export class CategoryService {
   /**
    * Inject providers
    *
-   * @param categoryRepository - to manipulate users table
+   * @param categoryRepository - to manipulate categories table
+   * @param userService - to fetch user
    */
   constructor(
     @InjectRepository(CategoryRepository)
     private readonly categoryRepository: CategoryRepository,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -41,6 +44,33 @@ export class CategoryService {
     await this.findOne({ id: categoryId });
 
     return this.buildTree(categoryId, depth);
+  }
+
+  public async subscribe(
+    userId: string,
+    categoryId: string,
+  ): Promise<Category> {
+    const user = await this.userService.findWithCategories({ id: userId });
+    const category = await this.findOne({ id: categoryId });
+    user.addCategory(category);
+
+    await user.save();
+
+    return category;
+  }
+
+  public async unsubscribe(
+    userId: string,
+    categoryId: string,
+  ): Promise<Category> {
+    const user = await this.userService.findWithCategories({ id: userId });
+    const deletedCategory = user.subscribedCategories.find(
+      (category) => category.id === categoryId,
+    );
+    user.removeCategory(categoryId);
+
+    await user.save();
+    return deletedCategory;
   }
 
   /**
@@ -76,6 +106,15 @@ export class CategoryService {
       node: currentNode,
       children: await Promise.all(childrenTrees),
     };
+  }
+
+  /**
+   * Return all categories that user has subscribed
+   * @param userId - searched user
+   */
+  public async subscribedCategories(userId: string): Promise<Category[]> {
+    const user = await this.userService.findWithCategories({ id: userId });
+    return user.subscribedCategories;
   }
 
   /**

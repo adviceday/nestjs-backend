@@ -3,6 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +14,7 @@ import { compare } from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 import { Settings } from '../../settings/entities/settings.entity';
 import { Rate } from '../../rate/entities/rate.entity';
+import { Category } from '../../category/entities/category.entity';
 
 /**
  * Auth methods for
@@ -56,6 +59,13 @@ export class User extends BaseEntity {
    */
   @Column({ nullable: true })
   hashedRefreshToken?: string;
+
+  /**
+   * All categories that user subscribed
+   */
+  @ManyToMany(() => Category, (category) => category.subscribers)
+  @JoinTable()
+  subscribedCategories: Category[];
 
   /**
    * User settings relation
@@ -115,5 +125,20 @@ export class User extends BaseEntity {
   public publicView(): void {
     this.hashedPassword = undefined;
     this.hashedRefreshToken = undefined;
+  }
+
+  public addCategory(category: Category): void {
+    if (!this.subscribedCategories) {
+      this.subscribedCategories = [category];
+    } else {
+      this.subscribedCategories.push(category);
+    }
+  }
+
+  public removeCategory(categoryId: string): void {
+    const categoryIndex = this.subscribedCategories.findIndex(
+      (category) => category.id === categoryId,
+    );
+    this.subscribedCategories.splice(categoryIndex, 1);
   }
 }

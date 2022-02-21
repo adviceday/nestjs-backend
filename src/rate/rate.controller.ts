@@ -10,6 +10,7 @@ import { Rate } from './entities/rate.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { UserService } from '../user/services/user.service';
+import { Translate } from '../lang/decorators/translate.decorator';
 
 /**
  * @ignore
@@ -23,20 +24,17 @@ export class RateController {
   ) {}
 
   @Get('/all')
+  @Translate('array', ['name', 'description'])
   @HttpCode(HttpStatus.OK)
   public getAll(): Promise<Rate[]> {
     return this.rateService.getAll();
   }
 
   @Get('/current')
+  @Translate('object', ['name', 'description'])
   @HttpCode(HttpStatus.OK)
   public async getUserRate(@GetUser('sub') userId: string): Promise<Rate> {
     const user = await this.userService.findOne({ id: userId });
     return this.rateService.findOne({ id: user.rateId });
-  }
-
-  @Get('/test-rate-guard')
-  public testGuard(): string {
-    return 'super';
   }
 }

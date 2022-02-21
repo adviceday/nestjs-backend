@@ -136,6 +136,23 @@ export class UserService {
   }
 
   /**
+   * Finding user and all subscribed categories
+   *
+   * @param userFields - user params
+   */
+  public async findWithCategories(userFields: Partial<User>): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: userFields,
+      relations: ['subscribedCategories'],
+    });
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    return user;
+  }
+
+  /**
    * generate hash of passed data and return this hash
    * @param data - data that need to be hashed
    * @private

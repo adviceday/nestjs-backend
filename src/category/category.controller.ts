@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Category } from './entities/category.entity';
 import { Translate } from '../lang/decorators/translate.decorator';
 import { Tree } from '../types/tree.type';
+import { GetUser } from '../user/decorators/get-user.decorator';
 
 /**
  * @ignore
@@ -30,6 +32,15 @@ export class CategoryController {
     return this.categoryService.topCategories();
   }
 
+  @Get('/subscribed')
+  @Translate('array', ['name'])
+  @HttpCode(HttpStatus.OK)
+  public subscribedCategories(
+    @GetUser('sub') userId: string,
+  ): Promise<Category[]> {
+    return this.categoryService.subscribedCategories(userId);
+  }
+
   @Get('/:id')
   @Translate('tree', ['name'])
   @HttpCode(HttpStatus.OK)
@@ -38,5 +49,25 @@ export class CategoryController {
     @Query('depth', new DefaultValuePipe(999), ParseIntPipe) depth: number,
   ): Promise<Tree<Category>> {
     return this.categoryService.categoryTree(categoryId, depth);
+  }
+
+  @Post('/:id/subscribe')
+  @Translate('object', ['name'])
+  @HttpCode(HttpStatus.OK)
+  public subscribe(
+    @GetUser('sub') userId: string,
+    @Param('id') categoryId: string,
+  ): Promise<Category> {
+    return this.categoryService.subscribe(userId, categoryId);
+  }
+
+  @Post('/:id/unsubscribe')
+  @Translate('object', ['name'])
+  @HttpCode(HttpStatus.OK)
+  public unsubscribe(
+    @GetUser('sub') userId: string,
+    @Param('id') categoryId: string,
+  ): Promise<Category> {
+    return this.categoryService.unsubscribe(userId, categoryId);
   }
 }
