@@ -30,8 +30,7 @@ export class AdviceService {
     userId: string,
   ): Promise<Advice> {
     const advice = await this.findOne({ id: adviceId });
-
-    await this.userService.addManyToMany(userId, 'favoriteAdvices', advice);
+    await this.userService.addManyToMany(userId, 'favoriteAdvices', adviceId);
 
     return advice;
   }
@@ -46,7 +45,11 @@ export class AdviceService {
     userId: string,
   ): Promise<Advice> {
     const advice = await this.findOne({ id: adviceId });
-    await this.userService.removeManyToMany(userId, 'favoriteAdvices', advice);
+    await this.userService.removeManyToMany(
+      userId,
+      'favoriteAdvices',
+      adviceId,
+    );
 
     return advice;
   }
@@ -58,7 +61,7 @@ export class AdviceService {
    */
   public async addToHistory(adviceId: string, userId: string): Promise<Advice> {
     const advice = await this.findOne({ id: adviceId });
-    await this.userService.removeManyToMany(userId, 'adviceHistory', advice);
+    await this.userService.removeManyToMany(userId, 'adviceHistory', adviceId);
 
     return advice;
   }
@@ -73,7 +76,7 @@ export class AdviceService {
     userId: string,
   ): Promise<Advice> {
     const advice = await this.findOne({ id: adviceId });
-    await this.userService.removeManyToMany(userId, 'adviceHistory', advice);
+    await this.userService.removeManyToMany(userId, 'adviceHistory', adviceId);
 
     return advice;
   }
