@@ -15,6 +15,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { Settings } from '../../settings/entities/settings.entity';
 import { Rate } from '../../rate/entities/rate.entity';
 import { Category } from '../../category/entities/category.entity';
+import { Advice } from '../../advice/entities/advice.entity';
 
 /**
  * Auth methods for
@@ -64,7 +65,7 @@ export class User extends BaseEntity {
    * All categories that user subscribed
    */
   @ManyToMany(() => Category, (category) => category.subscribers)
-  @JoinTable()
+  @JoinTable({ name: 'user_subscribed_categories' })
   subscribedCategories: Category[];
 
   /**
@@ -76,6 +77,17 @@ export class User extends BaseEntity {
   })
   @JoinColumn()
   settings: Settings;
+
+  @ManyToMany(() => Advice, (advice) => advice.inUsersFavorites)
+  @JoinTable({ name: 'user_favorite_advices' })
+  favoriteAdvices: Advice[];
+
+  /**
+   * All advices that have been read by user
+   */
+  @ManyToMany(() => Advice, (advice) => advice.id)
+  @JoinTable({ name: 'user_advice_history' })
+  adviceHistory: Advice[];
 
   /**
    * ID of settings relation
@@ -127,18 +139,30 @@ export class User extends BaseEntity {
     this.hashedRefreshToken = undefined;
   }
 
-  public addCategory(category: Category): void {
-    if (!this.subscribedCategories) {
-      this.subscribedCategories = [category];
+  /**
+   * Add object to "many to many" field
+   * @param property - column name
+   * @param object - object itself
+   */
+  public addManyToMany(property: string, object: object): Promise<User> {
+    if (!this[property]) {
+      this[property] = [object];
     } else {
-      this.subscribedCategories.push(category);
+      this[property].push(object);
     }
+
+    return this.save();
   }
 
-  public removeCategory(categoryId: string): void {
-    const categoryIndex = this.subscribedCategories.findIndex(
-      (category) => category.id === categoryId,
-    );
-    this.subscribedCategories.splice(categoryIndex, 1);
+  /**
+   * Remove object from "many to many" field
+   * @param property - column name
+   * @param objectId - id of object to delete
+   */
+  public removeManyToMany(property: string, objectId: string): Promise<User> {
+    const objectIndex = this[property].findIndex((obj) => obj.id === objectId);
+    this[property].splice(objectIndex, 1);
+
+    return this.save();
   }
 }

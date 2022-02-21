@@ -43,7 +43,7 @@ export class CategoryService {
     // call it to check existent
     await this.findOne({ id: categoryId });
 
-    return this.buildTree(categoryId, depth);
+    return this.categoryRepository.buildTree(categoryId, depth);
   }
 
   public async subscribe(
@@ -52,9 +52,7 @@ export class CategoryService {
   ): Promise<Category> {
     const user = await this.userService.findWithCategories({ id: userId });
     const category = await this.findOne({ id: categoryId });
-    user.addCategory(category);
-
-    await user.save();
+    await user.addManyToMany('subscribedCategories', category);
 
     return category;
   }
@@ -67,45 +65,9 @@ export class CategoryService {
     const deletedCategory = user.subscribedCategories.find(
       (category) => category.id === categoryId,
     );
-    user.removeCategory(categoryId);
+    await user.removeManyToMany('subscribedCategories', categoryId);
 
-    await user.save();
     return deletedCategory;
-  }
-
-  /**
-   * recursive function
-   * building tree of category with categoryId
-   *
-   * @param categoryId - id or category
-   * @param depth - depth of  tree
-   * @private
-   */
-  private async buildTree(
-    categoryId: string,
-    depth = 999,
-  ): Promise<Tree<Category>> {
-    const currentNode = await this.categoryRepository.findOne({
-      id: categoryId,
-    });
-
-    if (1 >= depth || !currentNode) {
-      return {
-        node: currentNode,
-        children: [],
-      };
-    }
-
-    const children = await this.categoryRepository.find({
-      parentId: currentNode.id,
-    });
-    const childrenTrees = children.map((child) =>
-      this.buildTree(child.id, depth - 1),
-    );
-    return {
-      node: currentNode,
-      children: await Promise.all(childrenTrees),
-    };
   }
 
   /**
