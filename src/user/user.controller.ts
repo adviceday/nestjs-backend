@@ -41,6 +41,7 @@ export class UserController {
   @Get('/current-user')
   @HttpCode(HttpStatus.OK)
   public async getUser(@GetUser('sub') userId: string): Promise<User> {
+    console.log(userId);
     const user = await this.userService.findOne({ id: userId });
 
     user.publicView();

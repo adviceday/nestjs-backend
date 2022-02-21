@@ -1,5 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { lang } from '../../lang/types/lang.type';
+import { User } from '../../user/entities/user.entity';
 
 /**
  * Category entity
@@ -23,6 +30,12 @@ export class Category extends BaseEntity {
    */
   @Column()
   level: number;
+
+  /**
+   * All users that subscribe to this category
+   */
+  @ManyToMany(() => User, (user) => user.subscribedCategories)
+  subscribers: User[];
 
   /**
    * True means that category
