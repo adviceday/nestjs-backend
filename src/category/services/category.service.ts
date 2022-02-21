@@ -46,21 +46,32 @@ export class CategoryService {
     return this.categoryRepository.buildTree(categoryId, depth);
   }
 
+  /**
+   * Add category to user subscribe list
+   * @param userId - ID of user
+   * @param categoryId - ID of category
+   */
   public async subscribe(
     userId: string,
     categoryId: string,
   ): Promise<Category> {
-    const user = await this.userService.findWithCategories({ id: userId });
+    const user = await this.userService.findOne({ id: userId });
     const category = await this.findOne({ id: categoryId });
     await user.addManyToMany('subscribedCategories', category);
 
     return category;
   }
 
+  /**
+   * Remove category from user subscribe list
+   * @param userId - ID of user
+   * @param categoryId - ID of category
+   */
   public async unsubscribe(
     userId: string,
     categoryId: string,
   ): Promise<Category> {
+    await this.findOne({ id: categoryId });
     const user = await this.userService.findWithCategories({ id: userId });
     const deletedCategory = user.subscribedCategories.find(
       (category) => category.id === categoryId,
