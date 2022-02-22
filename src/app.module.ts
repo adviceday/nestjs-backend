@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { CategoryModule } from './category/category.module';
 import { LangModule } from './lang/lang.module';
 import { AdviceModule } from './advice/advice.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AdviceModule } from './advice/advice.module';
     CategoryModule,
     LangModule,
     AdviceModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
 })
