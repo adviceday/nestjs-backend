@@ -4,8 +4,9 @@ import { UserService } from '../../user/services/user.service';
 import { Advice } from '../entities/advice.entity';
 import { AdviceRepository } from '../repositories/advice.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotificationsService } from '../../notifications/services/notifications.service';
 import { CategoryService } from '../../category/services/category.service';
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { AdviceService } from './advice.service';
 
 /**
  * Cron service for generating advises
@@ -16,15 +17,17 @@ export class AdviceGeneratorService {
    * Inject providers
    * @param adviceRepository - to fetch advices
    * @param userService - to read user categories and history
-   * @param notificationsService - to send notifications to the client
+   * @param adviceService - to set compilations
    * @param categoryService - to take brothers categories
+   * @param notificationsService - to send notifications
    */
   constructor(
     @InjectRepository(AdviceRepository)
     private readonly adviceRepository: AdviceRepository,
     private readonly userService: UserService,
-    private readonly notificationsService: NotificationsService,
+    private readonly adviceService: AdviceService,
     private readonly categoryService: CategoryService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -43,11 +46,24 @@ export class AdviceGeneratorService {
       advices: usersAdvices[index],
     }));
 
+    // TODO: clear compilation only if it's empty
     for (const obj of usersAdvicesMapped) {
-      this.notificationsService.emit(obj.userId, {
-        type: 'advices-generated',
-        data: obj.advices,
-      });
+      if (obj.advices.length) {
+        this.adviceService
+          .clearUserCompilation(obj.userId)
+          .then(() =>
+            this.adviceService.setUserCompilation(
+              obj.userId,
+              obj.advices.map((advice) => advice.id),
+            ),
+          )
+          .then(() =>
+            this.notificationsService.emit(obj.userId, {
+              en: 'New advices generated',
+              ru: 'Новые советы сгенерированы',
+            }),
+          );
+      }
     }
   }
 

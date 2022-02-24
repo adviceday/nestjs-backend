@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { filter, map, Observable, Subject } from 'rxjs';
-import { Notification } from '../types/notification.type';
-import { notificationTransporter } from '../types/notification-transporter.type';
+import { Client } from 'onesignal-node';
+import { lang } from '../../lang/types/lang.type';
+import { ClientResponse } from 'onesignal-node/lib/types';
 
 /**
  * Service for sending notifications to the users
@@ -9,31 +9,23 @@ import { notificationTransporter } from '../types/notification-transporter.type'
 @Injectable()
 export class NotificationsService {
   /**
-   * Rxjs subject for transporting messages
-   * @private
+   * Inject providers
+   * @param onesignalClient - to create notification in onesignal
    */
-  private transporter = new Subject<notificationTransporter>();
+  constructor(private readonly onesignalClient: Client) {}
 
   /**
-   * Stream notifications and filtering them by userid
-   * @param userId - id of user that subscribe to stream
+   * send notification to specific user
+   * @param forUser - id of onesignal user to send notification
+   * @param data - messages on multiple langs
    */
-  public stream(userId: string): Observable<Notification> {
-    return this.transporter.asObservable().pipe(
-      filter(
-        (notification: notificationTransporter) =>
-          notification.forUser === userId,
-      ),
-      map((data: notificationTransporter) => data.notification),
-    );
-  }
-
-  /**
-   * Emit new notification to transporter Subject
-   * @param forUser - ID of user that need to get notification
-   * @param notification - notification object itself
-   */
-  public emit(forUser: string, notification: Notification): void {
-    this.transporter.next({ notification, forUser });
+  public emit(
+    forUser: string,
+    data: Record<lang, string>,
+  ): Promise<ClientResponse> {
+    return this.onesignalClient.createNotification({
+      contents: data,
+      include_player_ids: [forUser],
+    });
   }
 }

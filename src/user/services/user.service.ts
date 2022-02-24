@@ -135,6 +135,9 @@ export class UserService {
     return user;
   }
 
+  /**
+   * Fetch all users from db
+   */
   public async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
@@ -156,6 +159,10 @@ export class UserService {
     return user;
   }
 
+  /**
+   * Returns user history
+   * @param userId - id of selected user
+   */
   public async adviceHistory(userId: string): Promise<Advice[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -166,15 +173,29 @@ export class UserService {
   }
 
   /**
+   * Returns current advice compilation
+   * for selected user
+   * @param userId - id of selected user
+   */
+  public async getCompilation(userId: string): Promise<Advice[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['adviceCompilation'],
+    });
+
+    return user.adviceCompilation;
+  }
+
+  /**
    * add many-to-many relation record of user entity
    * @param userId - id of user to add relation
    * @param relationKey - field which contain relation
-   * @param relationId - id of related object
+   * @param relationId - id of related object or array of them
    */
   public async addManyToMany(
     userId: string,
     relationKey: keyof User,
-    relationId: string,
+    relationId: string | string[],
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
     await this.userRepository
@@ -190,12 +211,12 @@ export class UserService {
    * remove many-to-many relation record of user entity
    * @param userId - id of user to add relation
    * @param relationKey - field which contain relation
-   * @param relationId - id of related object
+   * @param relationId - id of related object or array of them
    */
   public async removeManyToMany(
     userId: string,
     relationKey: keyof User,
-    relationId: string,
+    relationId: string | string[],
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
     await this.userRepository

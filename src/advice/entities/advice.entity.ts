@@ -81,4 +81,10 @@ export class Advice extends BaseEntity {
    */
   @ManyToMany(() => User, (user) => user.favoriteAdvices)
   inUsersFavorites: User[];
+
+  /**
+   * All users
+   */
+  @ManyToMany(() => User, (user) => user.adviceCompilation)
+  inUsersCompilation: User[];
 }
