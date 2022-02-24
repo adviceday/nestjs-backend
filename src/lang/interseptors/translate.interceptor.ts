@@ -64,6 +64,12 @@ export class TranslateInterceptor implements NestInterceptor {
     );
   }
 
+  /**
+   * Method for iteration through tree structure
+   * @param tree - tree structure for iterating
+   * @param fn - function that applying for all nodes of tree
+   * @private
+   */
   private iterateTree(tree: Tree<object>, fn: (obj: object) => void): void {
     if (!tree.children.length) {
       fn(tree.node);

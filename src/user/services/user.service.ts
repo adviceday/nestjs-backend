@@ -14,6 +14,7 @@ import { User } from '../entities/user.entity';
 import { IsNull, Not } from 'typeorm';
 import { Settings } from '../../settings/entities/settings.entity';
 import { RateService } from '../../rate/services/rate.service';
+import { Advice } from '../../advice/entities/advice.entity';
 
 /**
  * User service
@@ -134,6 +135,10 @@ export class UserService {
     return user;
   }
 
+  public async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
   /**
    * Finding user and all subscribed categories
    *
@@ -149,6 +154,15 @@ export class UserService {
     }
 
     return user;
+  }
+
+  public async adviceHistory(userId: string): Promise<Advice[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['adviceHistory'],
+    });
+
+    return user.adviceHistory;
   }
 
   /**

@@ -61,7 +61,7 @@ export class AdviceService {
    */
   public async addToHistory(adviceId: string, userId: string): Promise<Advice> {
     const advice = await this.findOne({ id: adviceId });
-    await this.userService.removeManyToMany(userId, 'adviceHistory', adviceId);
+    await this.userService.addManyToMany(userId, 'adviceHistory', advice.id);
 
     return advice;
   }
