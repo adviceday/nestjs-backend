@@ -91,6 +91,20 @@ export class CategoryService {
   }
 
   /**
+   * Returns all brothers of category
+   * @param categoryId - id of category that need brothers
+   */
+  public async brothers(categoryId: string): Promise<Category[]> {
+    const initialCategory = await this.findOne({ id: categoryId });
+    if (initialCategory.level === 1) {
+      return [];
+    }
+
+    const parentTree = await this.categoryTree(initialCategory.parentId, 2);
+    return parentTree.children.map((category) => category.node);
+  }
+
+  /**
    * Try to find category record
    * if it's not exist throws error
    *

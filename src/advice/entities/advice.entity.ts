@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -52,11 +51,17 @@ export class Advice extends BaseEntity {
   originLink: string;
 
   /**
-   * All categories that advice includes
+   * Category of advice
    */
-  @ManyToMany(() => Category, (category) => category.advices)
-  @JoinTable({ name: 'advices_categories' })
-  categories: Category[];
+  @ManyToOne(() => Category, (category) => category.id)
+  @JoinColumn()
+  category: Category;
+
+  /**
+   * Related category id
+   */
+  @RelationId((advice: Advice) => advice.category)
+  categoryId: string;
 
   /**
    * Author of the advice

@@ -13,6 +13,7 @@ import { CategoryModule } from './category/category.module';
 import { LangModule } from './lang/lang.module';
 import { AdviceModule } from './advice/advice.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { NotificationsModule } from './notifications/notifications.module';
       inject: [ConfigService],
       useFactory: adminjsFactory,
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     SettingsModule,
