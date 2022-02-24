@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -12,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { Advice } from './entities/advice.entity';
 import { Translate } from '../lang/decorators/translate.decorator';
+import { UserService } from '../user/services/user.service';
 
 /**
  * @ignore
@@ -19,7 +21,22 @@ import { Translate } from '../lang/decorators/translate.decorator';
 @Controller('advice')
 @UseGuards(AuthGuard('jwt-access'))
 export class AdviceController {
-  constructor(private readonly adviceService: AdviceService) {}
+  constructor(
+    private readonly adviceService: AdviceService,
+    private readonly userService: UserService,
+  ) {}
+
+  @Get('/get-compilation')
+  @Translate('array', ['text'])
+  @HttpCode(HttpStatus.OK)
+  public async getCompilation(
+    @GetUser('sub') userId: string,
+  ): Promise<Advice[]> {
+    const compilation = await this.userService.getCompilation(userId);
+    await this.adviceService.clearUserCompilation(userId);
+
+    return compilation;
+  }
 
   @Post('/:id/add-fav')
   @Translate('object', ['text'])

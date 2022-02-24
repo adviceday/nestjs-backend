@@ -41,6 +41,7 @@
     "express": "^4.17.2",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.2",
+    "onesignal-node": "^3.3.0",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",

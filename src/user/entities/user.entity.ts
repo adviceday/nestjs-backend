@@ -78,17 +78,6 @@ export class User extends BaseEntity {
   @JoinColumn()
   settings: Settings;
 
-  @ManyToMany(() => Advice, (advice) => advice.inUsersFavorites)
-  @JoinTable({ name: 'user_favorite_advices' })
-  favoriteAdvices: Advice[];
-
-  /**
-   * All advices that have been read by user
-   */
-  @ManyToMany(() => Advice, (advice) => advice.id)
-  @JoinTable({ name: 'user_advice_history' })
-  adviceHistory: Advice[];
-
   /**
    * ID of settings relation
    */
@@ -107,6 +96,23 @@ export class User extends BaseEntity {
    */
   @RelationId((user: User) => user.rate)
   rateId: string;
+
+  @ManyToMany(() => Advice, (advice) => advice.inUsersFavorites)
+  @JoinTable({ name: 'user_favorite_advices' })
+  favoriteAdvices: Advice[];
+  /**
+   * All advices that have been read by user
+   */
+  @ManyToMany(() => Advice, (advice) => advice.id)
+  @JoinTable({ name: 'user_advice_history' })
+  adviceHistory: Advice[];
+
+  /**
+   * Advices that generates for user
+   */
+  @ManyToMany(() => Advice, (advice) => advice.id)
+  @JoinTable({ name: 'advice_compilation' })
+  adviceCompilation: Advice[];
 
   /**
    * compare password with its hash stored in user record

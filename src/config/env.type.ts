@@ -46,4 +46,13 @@ export interface Env {
    * @link RefreshTokenStrategy
    */
   JWT_REFRESH_SECRET: string;
+
+  /**
+   * App id of onesignal service
+   */
+  ONESIGNAL_APP_ID: string;
+  /**
+   * Api key of onesignal service
+   */
+  ONESIGNAL_API_KEY: string;
 }
