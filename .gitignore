@@ -36,6 +36,7 @@ lerna-debug.log*
 
 # libs
 .adminjs
+documentation
 
 # postgres data
 pgdata
