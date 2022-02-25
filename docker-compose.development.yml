@@ -14,21 +14,5 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  server:
-    container_name: server-dev
-    env_file:
-      - ./.env.development
-    volumes:
-      - ./:/usr/src/app
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-    build:
-      context: .
-      dockerfile: Dockerfile-development
-    depends_on:
-      - db
-
 volumes:
   pgdata:
