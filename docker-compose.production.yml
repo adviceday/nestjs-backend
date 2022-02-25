@@ -16,7 +16,7 @@ services:
     container_name: server-prod
     ports:
       - 3000:3000
-    image: advicedayserver:1.0.0
+    build: .
     env_file:
       - ./.env.production
     restart: always
