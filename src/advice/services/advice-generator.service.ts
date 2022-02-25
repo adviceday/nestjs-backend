@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from '../../category/services/category.service';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { AdviceService } from './advice.service';
+import { Category } from '../../category/entities/category.entity';
+import { FindManyOptions, In, Not } from 'typeorm';
 
 /**
  * Cron service for generating advises
@@ -32,13 +34,19 @@ export class AdviceGeneratorService {
 
   /**
    * Loop through all users
-   * generate advices for them and send advices in notification
+   * generate advices for them and send notification
    */
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_NOON)
   public async handleCrone() {
     const allUsers = await this.userService.findAll();
 
-    const advicePromise = allUsers.map((user) => this.getAdvices(user.id));
+    const advicePromise = allUsers.map(async (user) => {
+      const compilation = await this.userService.getCompilation(user.id);
+      if (!compilation.length) {
+        return this.getAdvices(user.id);
+      }
+      return Promise.resolve([]);
+    });
     const usersAdvices = await Promise.all(advicePromise);
 
     const usersAdvicesMapped = allUsers.map((user, index) => ({
@@ -46,7 +54,6 @@ export class AdviceGeneratorService {
       advices: usersAdvices[index],
     }));
 
-    // TODO: clear compilation only if it's empty
     for (const obj of usersAdvicesMapped) {
       if (obj.advices.length) {
         this.adviceService
@@ -74,48 +81,34 @@ export class AdviceGeneratorService {
    * @param excludedAdvices - array of ids that don't need to searching
    * @private
    */
-  private findByCategory(
+  private async findByCategory(
     categoryId: string,
     excludedAdvices: string[] = [],
   ): Promise<Advice[]> {
-    let query = this.adviceRepository
-      .createQueryBuilder('advice')
-      .leftJoinAndSelect('advice.category', 'category')
-      .where('category.id = :categoryId', { categoryId });
-    if (excludedAdvices.length) {
-      query = query.where('advice.id not in (:...excludedIds)', {
-        excludedIds: excludedAdvices,
-      });
-    }
+    const queryOptions: FindManyOptions<Advice> = {
+      relations: ['category'],
+      where: { category: { id: categoryId } },
+    };
 
-    return query.getMany();
+    if (excludedAdvices.length) {
+      queryOptions.where['id'] = Not(In(excludedAdvices));
+    }
+    return this.adviceRepository.find(queryOptions);
   }
 
   /**
-   * Finding all advices in category
-   * and exclude some advices by array of ids
-   * But if it can't find advices in passed category
-   * Start searching in brothers categories
-   *
-   * @param categoryId - category to search
-   * @param excludedAdvices - array of ids that don't need to searching
+   * Fetch advices from brothers categories
+   * @param categoryId - id of initial category
+   * @param excludedIds - ids of advices that need to be ignored
    * @private
    */
-  private async complexCategory(
+  private async getBrotherAdvices(
     categoryId: string,
-    excludedAdvices: string[] = [],
+    excludedIds: string[],
   ): Promise<Advice[]> {
-    const initialCategory = await this.findByCategory(
-      categoryId,
-      excludedAdvices,
-    );
-    if (initialCategory.length) {
-      return initialCategory;
-    }
-
     const brothers = await this.categoryService.brothers(categoryId);
     const brothersAdvicePromises = brothers.map((category) =>
-      this.findByCategory(category.id, excludedAdvices),
+      this.findByCategory(category.id, excludedIds),
     );
     const brothersAdvices = await Promise.all(brothersAdvicePromises);
 
@@ -136,9 +129,29 @@ export class AdviceGeneratorService {
     });
 
     const advicePromises = subscribedCategories.map((category) =>
-      this.complexCategory(category.id, excludedAdvicesIds),
+      this.findByCategory(category.id, excludedAdvicesIds),
     );
-    const advices = await Promise.all(advicePromises);
-    return advices.flat();
+    const advicesMatrix = await Promise.all(advicePromises);
+    const advices = advicesMatrix.flat();
+
+    const emptyCategories: Category[] = advicesMatrix
+      .map<Category | false>((arr, index) =>
+        arr.length ? false : subscribedCategories[index],
+      )
+      .filter((category) =>
+        category ? !!Object.keys(category).length : false,
+      ) as Category[];
+
+    const advicesIds = advices.map((advice) => advice.id);
+    const brothersAdvicesPromises = emptyCategories.map((category) =>
+      this.getBrotherAdvices(category.id, [
+        ...excludedAdvicesIds,
+        ...advicesIds,
+      ]),
+    );
+    const brothersAdvicesMatrix = await Promise.all(brothersAdvicesPromises);
+    const brothersAdvices = brothersAdvicesMatrix.flat();
+
+    return [...brothersAdvices, ...advices];
   }
 }

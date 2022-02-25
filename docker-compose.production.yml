@@ -6,7 +6,7 @@ services:
     image: postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
-      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=main
     restart: always
     volumes:
@@ -14,15 +14,39 @@ services:
 
   server:
     container_name: server-prod
+    ports:
+      - 3000:3000
+    image: advicedayserver:1.0.0
     env_file:
       - ./.env.production
+    restart: always
     environment:
       NODE_ENV: production
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on:
       - db
+  nginx:
+    image: nginx
+    environment:
+      DOMAIN: $DOMAIN
+    depends_on:
+      - server
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot
+    environment:
+      DOMAIN: $DOMAIN
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
 
 volumes:
   pgdata:
