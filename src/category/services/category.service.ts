@@ -101,7 +101,9 @@ export class CategoryService {
     }
 
     const parentTree = await this.categoryTree(initialCategory.parentId, 2);
-    return parentTree.children.map((category) => category.node);
+    return parentTree.children
+      .map((category) => category.node)
+      .filter((brother) => brother.id !== categoryId);
   }
 
   /**
