@@ -12,6 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
@@ -35,6 +36,7 @@ services:
     depends_on:
       - db
   nginx:
+    container_name: nginx
     image: nginx
     environment:
       DOMAIN: $DOMAIN
@@ -49,6 +51,7 @@ services:
       - ./certbot/www:/var/www/certbot
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   certbot:
+    container_name: certbot
     image: certbot/certbot
     environment:
       DOMAIN: $DOMAIN
