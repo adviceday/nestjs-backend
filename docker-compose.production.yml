@@ -20,6 +20,8 @@ services:
     ports:
       - 5050:5050
     restart: always
+    depends_on:
+      - postgres-prod
     volumes:
       - pgadmin:/root/.pgadmin
 
@@ -53,6 +55,8 @@ services:
   certbot:
     container_name: certbot
     image: certbot/certbot
+    depends_on:
+      - nginx
     environment:
       DOMAIN: $DOMAIN
     volumes:
