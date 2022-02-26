@@ -15,6 +15,7 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4
     environment:
+      - MAX_LOGIN_ATTEMPTS=10
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
