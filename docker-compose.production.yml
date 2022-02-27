@@ -38,20 +38,6 @@ services:
       NODE_ENV: production
     depends_on:
       - db
-  nginx:
-    container_name: nginx
-    image: nginx
-    restart: unless-stopped
-    environment:
-      DOMAIN: $DOMAIN
-    depends_on:
-      - server
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt
 
 volumes:
   pgadmin:
