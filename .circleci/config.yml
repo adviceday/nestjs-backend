@@ -1,0 +1,50 @@
+version: 2.1
+
+jobs:
+  lint:
+    docker:
+      - image: circleci/node
+    resource_class: small
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-npm-{{ checksum "package.json" }}
+      - run:
+          name: "Install dependencies"
+          command: "npm i -D"
+      - save_cache:
+          key: v1-npm-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: "Format code"
+          command: "npm run format"
+      - run:
+          name: "Lint code"
+          command: "npm run lint"
+      - run:
+          name: "Lint doc coverage"
+          command: "npm run test:doccov"
+  deploy:
+    docker:
+      - image: circleci/node
+    resource_class: small
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "6b:6f:e6:40:ff:58:2d:d3:84:f8:66:0a:2e:2a:ac:db"
+      - run:
+          name: Add to known hosts
+          command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+      - checkout
+      - run:
+          name: Connect to server and run script
+          command: "ssh $SERVER_USER@$SERVER_IP 'bash -s' < .circleci/deploy.sh"
+
+workflows:
+  deploy_to_server:
+    jobs:
+      - lint
+      - deploy:
+          requires:
+            - lint
