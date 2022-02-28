@@ -23,7 +23,7 @@ jobs:
           name: "Lint code"
           command: "npm run lint"
       - run:
-          name: "Lint doc covarage"
+          name: "Lint doc coverage"
           command: "npm run test:doccov"
   deploy:
     docker:
