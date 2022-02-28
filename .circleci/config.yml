@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node:latest
+      - image: circleci/node
     steps:
       - checkout
       - run:
