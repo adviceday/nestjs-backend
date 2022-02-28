@@ -4,6 +4,7 @@ jobs:
   lint:
     docker:
       - image: circleci/node
+    resourse_class: medium
     steps:
       - checkout
       - restore_cache:
@@ -27,6 +28,7 @@ jobs:
   deploy:
     docker:
       - image: circleci/node
+    resourse_class: small
     steps:
       - add_ssh_keys:
           fingerprints:
