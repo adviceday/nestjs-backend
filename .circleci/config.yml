@@ -8,12 +8,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-npm-{{ checksum "package-lock.json" }}
+          key: v1-npm-{{ checksum "package.json" }}
       - run:
           name: "Install dependencies"
           command: "npm i -D"
       - save_cache:
-          key: v1-npm-{{ checksum "package-lock.json" }}
+          key: v1-npm-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run:
