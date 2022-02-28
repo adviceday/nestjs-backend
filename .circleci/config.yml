@@ -37,9 +37,12 @@ jobs:
       - run:
           name: Add to known hosts
           command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+#      - run:
+#          name: Disable host checking
+#          command: bash ./disable_host_key_checking.sh
       - run:
           name: Connect to server
-          command: "ssh adviceday@178.154.206.107"
+          command: "ssh adviceday@178.154.206.107 'bash -s' < ./deploy.sh"
       - run:
           name: Check path
           command: pwd
