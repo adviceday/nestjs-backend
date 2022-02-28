@@ -6,9 +6,15 @@ jobs:
       - image: circleci/node
     steps:
       - checkout
+      - restore_cache:
+          key: v1-npm-{{ checksum "package-lock.json" }}
       - run:
           name: "Install dependencies"
           command: "npm i -D"
+      - save_chache:
+          key: v1-npm-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
       - run:
           name: "Format code"
           command: "npm run format"
