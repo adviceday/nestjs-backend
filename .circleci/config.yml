@@ -24,11 +24,20 @@ jobs:
       - run:
           name: "Lint doc covarage"
           command: "npm run test:doccov"
-#  deploy:
-#    docker:
-#      - image: cimg/node
-#    steps:
-#      - checkout
+  deploy:
+    docker:
+      - image: circleci/node
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a7:90:dc:89:26:85:2c:21:3f:03:e0:ca:9c:c1:e4:ee"
+      - checkout
+      - run:
+          name: Connect
+          command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+      - run:
+          name: Check path
+          command: pwd
 #      - run:
 #          name: "Install dependencies"
 #          command: "npm i"
@@ -39,3 +48,4 @@ workflows:
   deploy_to_server:
     jobs:
       - lint
+      - deploy
