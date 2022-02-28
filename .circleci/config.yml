@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node
+      - image: cimg/node:latest
     steps:
       - checkout
       - run:
