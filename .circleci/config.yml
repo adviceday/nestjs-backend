@@ -4,7 +4,7 @@ jobs:
   lint:
     docker:
       - image: circleci/node
-    resource_class: medium
+    resource_class: small
     steps:
       - checkout
       - restore_cache:
@@ -37,20 +37,9 @@ jobs:
       - run:
           name: Add to known hosts
           command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
-#      - run:
-#          name: Disable host checking
-#          command: bash ./disable_host_key_checking.sh
       - run:
           name: Connect to server
           command: "ssh adviceday@178.154.206.107 'bash -s' < .circleci/deploy.sh"
-      - run:
-          name: Check path
-          command: pwd
-#      - run:
-#          name: "Install dependencies"
-#          command: "npm i"
-#      - run:
-#          name: ""
 
 workflows:
   deploy_to_server:

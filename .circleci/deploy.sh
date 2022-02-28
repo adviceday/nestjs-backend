@@ -1,2 +1,4 @@
 cd /home/adviceday/app/nestjs-backend/
-pwd
+touch some.txt
+echo "some text" >> some.text
+exit
