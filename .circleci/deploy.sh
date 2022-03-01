@@ -1,7 +1,8 @@
-cd /home/adviceday/nestjs-backend/
-touch some.txt
-echo "some text" > some.txt
+#!/usr/bin/expect -f
+
+cd /home/adviceday/app
+echo "some text" >> test.txt
 #git checkout master
 #eval $(ssh-agent)
-#ssh-add ~/.ssh/gregor.t_github
+
 exit
