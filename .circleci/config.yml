@@ -44,7 +44,15 @@ jobs:
 workflows:
   deploy_to_server:
     jobs:
-      - lint
+      - lint:
+          filters:
+            branches:
+              only:
+                - master
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - lint

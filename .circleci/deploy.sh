@@ -7,4 +7,6 @@ cd /home/adviceday/app
 git checkout master
 git pull origin master
 
+sudo $(cat .env.production) docker-compose -f docker-compose.production.yml up --build --no-deps -d server
+
 exit
