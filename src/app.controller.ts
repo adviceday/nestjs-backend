@@ -8,6 +8,6 @@ export class AppController {
   @Get('/ping')
   @HttpCode(HttpStatus.OK)
   public ping() {
-    return { message: 'pong 2' };
+    return { message: 'pong' };
   }
 }
