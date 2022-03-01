@@ -32,17 +32,16 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "a7:90:dc:89:26:85:2c:21:3f:03:e0:ca:9c:c1:e4:ee"
-      - checkout
+            - "ee:33:b6:5b:a7:1c:3a:d6:42:a1:a8:24:0e:6a:b9:39"
       - run:
           name: Add to known hosts
           command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
       - run:
-          name: Connect to server
+          name: Connect to server and run script
           command: "ssh adviceday@178.154.206.107 'bash -s' < .circleci/deploy.sh"
 
 workflows:
   deploy_to_server:
     jobs:
-      - lint
+#      - lint
       - deploy
