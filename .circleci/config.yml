@@ -36,6 +36,7 @@ jobs:
       - run:
           name: Add to known hosts
           command: ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+      - run: ls -a
       - run:
           name: Connect to server and run script
           command: "ssh adviceday@178.154.206.107 'bash -s' < .circleci/deploy.sh"
