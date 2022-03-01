@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run:
           name: Connect to server and run script
-          command: "ssh adviceday@178.154.206.107 'bash -s' < .circleci/deploy.sh"
+          command: "ssh adviceday@$SERVER_IP 'bash -s' < .circleci/deploy.sh"
 
 workflows:
   deploy_to_server:
