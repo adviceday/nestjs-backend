@@ -44,5 +44,7 @@ jobs:
 workflows:
   deploy_to_server:
     jobs:
-#      - lint
-      - deploy
+      - lint
+      - deploy:
+          requires:
+            - lint
