@@ -9,7 +9,7 @@ Owner of project [Genrih](https://t.me/GenrihGrigoryan)
 
 1. Ip address of production server: `***REMOVED***`
 2. Domain of production server: `api.adviceday.me`
-3. Documentation domain: `adviceday-docs.surge.sh`
+3. Documentation link: https://adviceday-docs.surge.sh
 4. Documentation ip `***REMOVED***` (to connect custom domain)
 5. Organisation in github: https://github.com/adviceday
 6. Ssh link to project repository `git@github.com:adviceday/nestjs-backend.git`
