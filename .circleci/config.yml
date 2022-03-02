@@ -1,6 +1,27 @@
 version: 2.1
 
 jobs:
+  deploy_docs:
+    docker:
+      - image: circleci/node
+    resoource_class: small
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-npm-{{ checksum "package.json" }}
+      - run:
+          name: "Install dependencies"
+          command: "npm i -D"
+      - save_cache:
+          key: v1-npm-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Build docs
+          command: "npm run docgen"
+      - run:
+          name: Deploy docs
+          command: "surge --project ./documentation --domain adviceday-docs.surge.sh"
   lint:
     docker:
       - image: circleci/node
@@ -56,3 +77,10 @@ workflows:
                 - master
           requires:
             - lint
+    - deploy_docs:
+        filters:
+          branches:
+            only:
+              - master
+        requires:
+          - lint
