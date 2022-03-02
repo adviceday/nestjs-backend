@@ -4,7 +4,7 @@ jobs:
   deploy_docs:
     docker:
       - image: circleci/node
-    resoource_class: small
+    resource_class: small
     steps:
       - checkout
       - restore_cache:
