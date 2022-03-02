@@ -77,10 +77,10 @@ workflows:
                 - master
           requires:
             - lint
-    - deploy_docs:
-        filters:
-          branches:
-            only:
-              - master
-        requires:
-          - lint
+      - deploy_docs:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - lint
