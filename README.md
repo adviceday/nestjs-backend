@@ -1,73 +1,43 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# About
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project has started by Gregor Tokarev, if you have any question please contact me
+by [telegram](https://t.me/gregortokarev)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Owner of project [Genrih](https://t.me/GenrihGrigoryan)
 
-## Description
+### Remotes
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Ip address of production server: `51.250.11.39`
+2. Domain of production server: `api.adviceday.me`
+3. Documentation domain: `adviceday-docs.surge.sh`
+4. Documentation ip `138.197.235.123` (to connect custom domain)
+5. Organisation in github: https://github.com/adviceday
+6. Ssh link to project repository `git@github.com:adviceday/nestjs-backend.git`
+7. Link to ci/cd: https://app.circleci.com/pipelines/github/adviceday
 
-## Installation
+### Development setup
 
-```bash
-$ npm install
+1. Run `npm install`
+2. Add .env.development in the root
+
+```dotenv
+POSTGRES_USER=root
+POSTGRES_PASSWORD=root
+POSTGRES_DB=main
+POSTGRES_PORT=5432
+POSTGRES_HOST=localhost
+
+ADMINJS_ROOT_USER=root
+ADMINJS_ROOT_PASSWORD=idfi3e8
+ADMINJS_COOKIE_PASSWORD=sdfiuwher
+
+JWT_SECRET=sdalfowiej
+JWT_REFRESH_SECRET=weuhweur
+
+ONESIGNAL_APP_ID=40e08ffa-6761-4ea6-99b2-15d899a17b9d
+ONESIGNAL_API_KEY=ZDBjMTE4MmEtNzkyNy00NmNkLTk1ZGQtODkyODQ5YmQyZjc4
+
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+3. Run docker-compose to up postgres `sudo docker-compose -f docker-compose.development up -d`
+4. Run app `npm run start:dev`
