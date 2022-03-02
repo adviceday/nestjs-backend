@@ -21,7 +21,7 @@ jobs:
           command: "npm run docgen"
       - run:
           name: Deploy docs
-          command: "surge --project ./documentation --domain adviceday-docs.surge.sh"
+          command: "./node_modules/.bin/surge --project ./documentation --domain adviceday-docs.surge.sh"
   lint:
     docker:
       - image: circleci/node
