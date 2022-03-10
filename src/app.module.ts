@@ -12,11 +12,15 @@ import { LangModule } from './lang/lang.module';
 import { AdviceModule } from './advice/advice.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DefaultAdminModule } from 'nestjs-admin';
+import { typeormConfig } from './config/db.config';
 
 @Module({
   imports: [
+    DefaultAdminModule,
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
+      load: [typeormConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
