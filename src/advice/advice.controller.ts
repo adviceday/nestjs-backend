@@ -14,6 +14,7 @@ import { GetUser } from '../user/decorators/get-user.decorator';
 import { Advice } from './entities/advice.entity';
 import { Translate } from '../lang/decorators/translate.decorator';
 import { UserService } from '../user/services/user.service';
+import { AdviceGeneratorService } from './services/advice-generator.service';
 
 /**
  * @ignore
@@ -24,7 +25,13 @@ export class AdviceController {
   constructor(
     private readonly adviceService: AdviceService,
     private readonly userService: UserService,
+    private readonly adviceGenerator: AdviceGeneratorService,
   ) {}
+
+  @Post('/trigger-generation')
+  public triggerGeneration() {
+    return this.adviceGenerator.handleCrone();
+  }
 
   @Get('/get-compilation')
   @Translate('array', ['text'])
