@@ -61,9 +61,6 @@ jobs:
       - run:
           name: Connect to server and run script
           command: "ssh $SERVER_USER@$SERVER_IP 'bash -s' < .circleci/deploy.sh"
-      - run:
-          name: health check
-          command: curl http://$SERVER_IP
 
 workflows:
   deploy_to_server:
