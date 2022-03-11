@@ -6,6 +6,8 @@ import { CategoryService } from './services/category.service';
 import { SettingsModule } from '../settings/settings.module';
 import { RateModule } from '../rate/rate.module';
 import { UserModule } from '../user/user.module';
+import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
+import { Category } from './entities/category.entity';
 
 @Module({
   imports: [
@@ -13,9 +15,14 @@ import { UserModule } from '../user/user.module';
     SettingsModule,
     UserModule,
     RateModule,
+    DefaultAdminModule,
   ],
   providers: [CategoryService],
   controllers: [CategoryController],
   exports: [CategoryService],
 })
-export class CategoryModule {}
+export class CategoryModule {
+  constructor(private readonly adminSite: DefaultAdminSite) {
+    adminSite.register('Advice', Category);
+  }
+}
