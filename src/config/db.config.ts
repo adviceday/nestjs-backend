@@ -1,6 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import { AdminUserEntity } from 'nestjs-admin';
 
+/**
+ * Register config for typeorm
+ */
 export const typeormConfig = registerAs('typeormConfig', () => ({
   type: 'postgres',
   username: process.env.POSTGRES_USER,
