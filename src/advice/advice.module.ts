@@ -9,8 +9,8 @@ import { AdviceGeneratorService } from './services/advice-generator.service';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { CategoryModule } from '../category/category.module';
 import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
-import { Advice } from './entities/advice.entity';
-import { AdviceAuthor } from './entities/advice-author.entity';
+import { AdviceAdmin } from './entities/advice-admin.entity';
+import { AdviceAuthorAdmin } from './entities/advice-author-admin.entity';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { AdviceAuthor } from './entities/advice-author.entity';
 })
 export class AdviceModule {
   constructor(private readonly adminSite: DefaultAdminSite) {
-    adminSite.register('Advice', Advice);
-    adminSite.register('Advice', AdviceAuthor);
+    adminSite.register('Advice', AdviceAdmin);
+    adminSite.register('Advice', AdviceAuthorAdmin);
   }
 }

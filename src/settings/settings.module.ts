@@ -5,7 +5,7 @@ import { UserModule } from '../user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SettingsRepository } from './repositories/settings.repository';
 import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
-import { Settings } from './entities/settings.entity';
+import { SettingsAdmin } from './entities/settings-admin.entity';
 
 @Module({
   imports: [
@@ -19,6 +19,6 @@ import { Settings } from './entities/settings.entity';
 })
 export class SettingsModule {
   constructor(private readonly adminSite: DefaultAdminSite) {
-    adminSite.register('User', Settings);
+    adminSite.register('User', SettingsAdmin);
   }
 }

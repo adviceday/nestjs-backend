@@ -7,7 +7,7 @@ import { SettingsModule } from '../settings/settings.module';
 import { RateModule } from '../rate/rate.module';
 import { UserModule } from '../user/user.module';
 import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
-import { Category } from './entities/category.entity';
+import { CategoryAdmin } from './entities/category-admin.entity';
 
 @Module({
   imports: [
@@ -23,6 +23,6 @@ import { Category } from './entities/category.entity';
 })
 export class CategoryModule {
   constructor(private readonly adminSite: DefaultAdminSite) {
-    adminSite.register('Advice', Category);
+    adminSite.register('Advice', CategoryAdmin);
   }
 }
