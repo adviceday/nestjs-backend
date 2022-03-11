@@ -5,7 +5,7 @@ import { UserRepository } from './repositories/user.repository';
 import { UserService } from './services/user.service';
 import { RateModule } from '../rate/rate.module';
 import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
-import { User } from './entities/user.entity';
+import { UserAdmin } from './entities/user-admin.entity';
 
 @Module({
   imports: [
@@ -19,6 +19,6 @@ import { User } from './entities/user.entity';
 })
 export class UserModule {
   constructor(private readonly adminSite: DefaultAdminSite) {
-    adminSite.register('User', User);
+    adminSite.register('User', UserAdmin);
   }
 }
