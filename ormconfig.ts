@@ -6,5 +6,4 @@ ConfigModule.forRoot({
   envFilePath: [`.env.${process.env.NODE_ENV}`],
   load: [typeormConfig],
 });
-console.log(typeormConfig());
 export default typeormConfig();
