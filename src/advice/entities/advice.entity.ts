@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   RelationId,
@@ -13,7 +12,6 @@ import {
 import { lang } from '../../lang/types/lang.type';
 import { AdviceAuthor } from './advice-author.entity';
 import { Category } from '../../category/entities/category.entity';
-import { User } from '../../user/entities/user.entity';
 
 /**
  * Advice entity
@@ -79,12 +77,12 @@ export class Advice extends BaseEntity {
   /**
    * Users that stared this advice
    */
-  @ManyToMany(() => User, (user) => user.favoriteAdvices)
-  inUsersFavorites: User[];
+  // @ManyToMany(() => User, (user) => user.favoriteAdvices)
+  // inUsersFavorites: User[];
 
   /**
    * All users
    */
-  @ManyToMany(() => User, (user) => user.adviceCompilation)
-  inUsersCompilation: User[];
+  // @ManyToMany(() => User, (user) => user.adviceCompilation)
+  // inUsersCompilation: User[];
 }
