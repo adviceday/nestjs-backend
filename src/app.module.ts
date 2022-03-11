@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormFactory } from './config/typeorm.factory';
-import { AdminModule } from '@adminjs/nestjs';
-import { adminjsFactory } from './config/adminjs.factory';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SettingsModule } from './settings/settings.module';
@@ -14,22 +12,21 @@ import { LangModule } from './lang/lang.module';
 import { AdviceModule } from './advice/advice.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DefaultAdminModule } from 'nestjs-admin';
+import { typeormConfig } from './config/db.config';
 
 @Module({
   imports: [
+    DefaultAdminModule,
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
+      load: [typeormConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: typeormFactory,
-    }),
-    AdminModule.createAdminAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: adminjsFactory,
     }),
     ScheduleModule.forRoot(),
     AuthModule,

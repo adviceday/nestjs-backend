@@ -97,7 +97,7 @@ export class User extends BaseEntity {
   @RelationId((user: User) => user.rate)
   rateId: string;
 
-  @ManyToMany(() => Advice, (advice) => advice.inUsersFavorites)
+  @ManyToMany(() => Advice, (advice) => advice.id)
   @JoinTable({ name: 'user_favorite_advices' })
   favoriteAdvices: Advice[];
   /**
