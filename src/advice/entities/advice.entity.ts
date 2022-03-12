@@ -61,7 +61,7 @@ export class Advice extends BaseEntity {
    * Related category id
    */
   @RelationId((advice: Advice) => advice.categories)
-  categoriesId: string[];
+  categoriesIds: string[];
 
   /**
    * Author of the advice

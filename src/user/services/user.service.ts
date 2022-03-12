@@ -136,10 +136,11 @@ export class UserService {
   }
 
   /**
-   * Fetch all users from db
+   * Fetch all users' ids from db
    */
-  public async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  public async findAllIds(): Promise<string[]> {
+    const users = await this.userRepository.find({ select: ['id'] });
+    return users.map((user) => user.id);
   }
 
   /**
