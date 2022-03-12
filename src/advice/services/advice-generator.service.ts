@@ -8,7 +8,6 @@ import { CategoryService } from '../../category/services/category.service';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { AdviceService } from './advice.service';
 import { Category } from '../../category/entities/category.entity';
-import { FindManyOptions, In, Not } from 'typeorm';
 
 /**
  * Cron service for generating advises
@@ -38,19 +37,19 @@ export class AdviceGeneratorService {
    */
   @Cron(CronExpression.EVERY_DAY_AT_NOON)
   public async handleCrone() {
-    const allUsers = await this.userService.findAll();
+    const allUsers = await this.userService.findAllIds();
 
-    const advicePromise = allUsers.map(async (user) => {
-      const compilation = await this.userService.getCompilation(user.id);
+    const advicePromise = allUsers.map(async (userId) => {
+      const compilation = await this.userService.getCompilation(userId);
       if (!compilation.length) {
-        return this.getAdvices(user.id);
+        return this.getAdvices(userId);
       }
       return Promise.resolve([]);
     });
     const usersAdvices = await Promise.all(advicePromise);
 
-    const usersAdvicesMapped = allUsers.map((user, index) => ({
-      userId: user.id,
+    const usersAdvicesMapped = allUsers.map((userId, index) => ({
+      userId,
       advices: usersAdvices[index],
     }));
 
@@ -85,15 +84,20 @@ export class AdviceGeneratorService {
     categoryId: string,
     excludedAdvices: string[] = [],
   ): Promise<Advice[]> {
-    const queryOptions: FindManyOptions<Advice> = {
-      relations: ['category'],
-      where: { category: { id: categoryId } },
-    };
-
+    let query = this.adviceRepository
+      .createQueryBuilder('advice')
+      .innerJoinAndSelect(
+        'advice.categories',
+        'category',
+        'category.id = :categoryId',
+        { categoryId },
+      );
     if (excludedAdvices.length) {
-      queryOptions.where['id'] = Not(In(excludedAdvices));
+      query = query.where('advice.id not in (:...excludedAdvices)', {
+        excludedAdvices,
+      });
     }
-    return this.adviceRepository.find(queryOptions);
+    return query.getMany();
   }
 
   /**
@@ -123,18 +127,25 @@ export class AdviceGeneratorService {
    */
   public async getAdvices(userId: string): Promise<Advice[]> {
     const excludedAdvices = await this.userService.adviceHistory(userId);
-    const excludedAdvicesIds = excludedAdvices.map((advice) => advice.id);
+    let excludedAdvicesIds = excludedAdvices.map((advice) => advice.id);
     const { subscribedCategories } = await this.userService.findWithCategories({
       id: userId,
     });
 
-    const advicePromises = subscribedCategories.map((category) =>
-      this.findByCategory(category.id, excludedAdvicesIds),
-    );
-    const advicesMatrix = await Promise.all(advicePromises);
-    const advices = advicesMatrix.flat();
+    const adviceMatrix = [];
+    await subscribedCategories.reduce(async (acc, category) => {
+      const prevAdvices = await acc;
+      adviceMatrix.push(prevAdvices);
 
-    const emptyCategories: Category[] = advicesMatrix
+      const prevAdvicesIds = prevAdvices.map((advice) => advice.id);
+      excludedAdvicesIds = excludedAdvicesIds.concat(prevAdvicesIds);
+
+      return this.findByCategory(category.id, excludedAdvicesIds);
+    }, this.findByCategory(subscribedCategories[0].id, excludedAdvicesIds));
+
+    const advices = adviceMatrix.flat();
+
+    const emptyCategories: Category[] = adviceMatrix
       .map<Category | false>((arr, index) =>
         arr.length ? false : subscribedCategories[index],
       )
