@@ -11,6 +11,8 @@ import { CategoryModule } from '../category/category.module';
 import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
 import { AdviceAdmin } from './entities/advice-admin.entity';
 import { AdviceAuthorAdmin } from './entities/advice-author-admin.entity';
+import { AdviceAuthorService } from './services/advice-author.service';
+import { AdviceAuthorController } from './advice-author.controller';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import { AdviceAuthorAdmin } from './entities/advice-author-admin.entity';
     TypeOrmModule.forFeature([AdviceRepository, AdviceAuthorRepository]),
     DefaultAdminModule,
   ],
-  providers: [AdviceService, AdviceGeneratorService],
-  controllers: [AdviceController],
+  providers: [AdviceService, AdviceGeneratorService, AdviceAuthorService],
+  controllers: [AdviceController, AdviceAuthorController],
 })
 export class AdviceModule {
   constructor(private readonly adminSite: DefaultAdminSite) {
