@@ -61,9 +61,12 @@ jobs:
       - run:
           name: Connect to server and run script
           command: "ssh $SERVER_USER@$SERVER_IP 'bash -s' < .circleci/deploy.sh"
+      - run:
+          name: Connect to server and run after_deploy script
+          command: "ssh $SERVER_USER@$SERVER_IP 'bash -s' < .circleci/after_deploy.sh"
 
 workflows:
-  deploy_to_server:
+  deploy:
     jobs:
       - lint
       - deploy:
