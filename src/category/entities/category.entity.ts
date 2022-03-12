@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { lang } from '../../lang/types/lang.type';
@@ -42,7 +41,7 @@ export class Category extends BaseEntity {
   /**
    * All advices that are in the category
    */
-  @OneToMany(() => Advice, (advice) => advice.category)
+  @ManyToMany(() => Advice, (advice) => advice.categories)
   advices: Advice[];
 
   /**
