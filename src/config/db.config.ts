@@ -11,7 +11,7 @@ export const typeormConfig = registerAs('typeormConfig', () => ({
   database: process.env.POSTGRES_DB,
   port: parseInt(process.env.POSTGRES_PORT),
   host: process.env.POSTGRES_HOST,
-  synchronize: process.env.NODE_ENV === 'development',
+  synchronize: true,
   entities: [__dirname + '/../**/*.entity.js', AdminUserEntity],
   migrations: ['src/migrations/*{.ts,.js}'],
   cli: {
