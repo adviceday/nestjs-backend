@@ -132,6 +132,8 @@ export class AdviceGeneratorService {
       id: userId,
     });
 
+    if (!subscribedCategories.length) return [];
+
     const adviceMatrix = [];
     await subscribedCategories.reduce(async (acc, category) => {
       const prevAdvices = await acc;
