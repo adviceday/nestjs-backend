@@ -49,7 +49,7 @@ export class UserService {
     const user = new User();
     user.email = userDto.email;
     user.authMethod = userDto.authMethod;
-    user.hashedPassword = await this.hashData(userDto.password);
+    user.hashedPassword = await UserService.hashData(userDto.password);
 
     const settings = new Settings();
     settings.lang = 'ru';
@@ -79,7 +79,7 @@ export class UserService {
     if (!compareRes) {
       throw new BadRequestException('Field oldPassword is incorrect');
     }
-    user.hashedPassword = await this.hashData(newPassword);
+    user.hashedPassword = await UserService.hashData(newPassword);
 
     return user.save();
   }
@@ -116,7 +116,7 @@ export class UserService {
     refreshToken: string,
   ): Promise<User> {
     const user = await this.userRepository.findOne({ id: userId });
-    user.hashedRefreshToken = await this.hashData(refreshToken);
+    user.hashedRefreshToken = await UserService.hashData(refreshToken);
 
     return user.save();
   }
@@ -189,6 +189,7 @@ export class UserService {
 
   /**
    * add many-to-many relation record of user entity
+   * If relation already exist just return user
    * @param userId - id of user to add relation
    * @param relationKey - field which contain relation
    * @param relationId - id of related object or array of them
@@ -199,6 +200,17 @@ export class UserService {
     relationId: string | string[],
   ): Promise<User> {
     const user = await this.findOne({ id: userId });
+    const relations = await this.userRepository
+      .createQueryBuilder()
+      .relation(User, relationKey)
+      .of(user)
+      .loadMany();
+
+    const relationIds = relations.map((rel) => rel.id);
+    if (relationIds.includes(relationId)) {
+      return user;
+    }
+
     await this.userRepository
       .createQueryBuilder()
       .relation(User, relationKey)
@@ -234,7 +246,7 @@ export class UserService {
    * @param data - data that need to be hashed
    * @private
    */
-  private hashData(data: string): Promise<string> {
+  private static hashData(data: string): Promise<string> {
     return hash(data, 10);
   }
 }
