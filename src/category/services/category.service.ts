@@ -57,7 +57,12 @@ export class CategoryService {
   ): Promise<Category> {
     const user = await this.userService.findOne({ id: userId });
     const category = await this.findOne({ id: categoryId });
-    await user.addManyToMany('subscribedCategories', category);
+
+    await this.userService.addManyToMany(
+      user.id,
+      'subscribedCategories',
+      categoryId,
+    );
 
     return category;
   }
