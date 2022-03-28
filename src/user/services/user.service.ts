@@ -161,6 +161,7 @@ export class UserService {
   }
 
   /**
+   * TODO move to advice service
    * Returns user history
    * @param userId - id of selected user
    */
@@ -174,6 +175,7 @@ export class UserService {
   }
 
   /**
+   * TODO move to advice service
    * Returns current advice compilation
    * for selected user
    * @param userId - id of selected user
