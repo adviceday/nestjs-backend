@@ -75,16 +75,4 @@ export class Advice extends BaseEntity {
    */
   @RelationId((advice: Advice) => advice.author)
   authorId: string;
-
-  /**
-   * Users that stared this advice
-   */
-  // @ManyToMany(() => User, (user) => user.favoriteAdvices)
-  // inUsersFavorites: User[];
-
-  /**
-   * All users
-   */
-  // @ManyToMany(() => User, (user) => user.adviceCompilation)
-  // inUsersCompilation: User[];
 }

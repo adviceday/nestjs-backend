@@ -65,6 +65,13 @@ export class AdviceController {
     return this.adviceService.removeFromFavorites(adviceId, userId);
   }
 
+  @Get('/history')
+  @Translate('array', ['text'])
+  @HttpCode(HttpStatus.OK)
+  public getHistory(@GetUser('sub') userId: string): Promise<Advice[]> {
+    return this.userService.adviceHistory(userId);
+  }
+
   @Post('/:id/history-add')
   @Translate('object', ['text'])
   @HttpCode(HttpStatus.OK)
