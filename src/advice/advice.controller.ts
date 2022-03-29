@@ -34,7 +34,6 @@ export class AdviceController {
   }
 
   @Get('/get-compilation')
-  @Translate('array', ['text'])
   @HttpCode(HttpStatus.OK)
   public async getCompilation(
     @GetUser('sub') userId: string,
