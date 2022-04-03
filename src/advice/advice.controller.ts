@@ -44,6 +44,13 @@ export class AdviceController {
     return compilation;
   }
 
+  @Get('/favorites')
+  @Translate('array', ['text'])
+  @HttpCode(HttpStatus.OK)
+  public getFavorites(@GetUser('sub') userId: string): Promise<Advice[]> {
+    return this.userService.getFavorites(userId);
+  }
+
   @Post('/:id/add-fav')
   @Translate('object', ['text'])
   @HttpCode(HttpStatus.CREATED)

@@ -161,6 +161,19 @@ export class UserService {
   }
 
   /**
+   * Returns user favorite advices
+   * @param userId - id of selected user
+   */
+  public async getFavorites(userId: string): Promise<Advice[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['favoriteAdvices'],
+    });
+
+    return user.favoriteAdvices;
+  }
+
+  /**
    * TODO move to advice service
    * Returns user history
    * @param userId - id of selected user
