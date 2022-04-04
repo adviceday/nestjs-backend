@@ -48,7 +48,7 @@ export class AdviceController {
   @Translate('array', ['text'])
   @HttpCode(HttpStatus.OK)
   public getFavorites(@GetUser('sub') userId: string): Promise<Advice[]> {
-    return this.userService.getFavorites(userId);
+    return this.adviceService.getFavorites(userId);
   }
 
   @Post('/:id/add-fav')

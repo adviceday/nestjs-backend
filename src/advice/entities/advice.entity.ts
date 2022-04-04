@@ -51,7 +51,7 @@ export class Advice extends BaseEntity {
   originLink: string;
 
   /**
-   * Category of advice
+   * Categories of advice
    */
   @ManyToMany(() => Category, (category) => category.advices)
   @JoinTable({ name: 'advice_category' })
