@@ -75,7 +75,7 @@ export class AdviceController {
   @Translate('array', ['text'])
   @HttpCode(HttpStatus.OK)
   public getHistory(@GetUser('sub') userId: string): Promise<Advice[]> {
-    return this.userService.adviceHistory(userId);
+    return this.adviceService.getHistory(userId);
   }
 
   @Post('/:id/history-add')

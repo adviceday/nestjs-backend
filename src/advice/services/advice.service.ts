@@ -72,6 +72,22 @@ export class AdviceService {
   }
 
   /**
+   * Returns user history
+   * @param userId - id of selected user
+   */
+  public getHistory(userId: string): Promise<Advice[]> {
+    return this.adviceRepository.query(
+      `
+          select *
+          from main.public.advice
+                   inner join main.public.user_advice_history ufa on advice.id = ufa."adviceId"
+          where ufa."userId" = $1
+      `,
+      [userId],
+    );
+  }
+
+  /**
    * Add advice to user's history
    * @param adviceId - ID of advice that need to be added
    * @param userId - ID of user that want to add advice

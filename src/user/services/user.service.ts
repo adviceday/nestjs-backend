@@ -162,20 +162,6 @@ export class UserService {
 
   /**
    * TODO move to advice service
-   * Returns user history
-   * @param userId - id of selected user
-   */
-  public async adviceHistory(userId: string): Promise<Advice[]> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['adviceHistory'],
-    });
-
-    return user.adviceHistory;
-  }
-
-  /**
-   * TODO move to advice service
    * Returns current advice compilation
    * for selected user
    * @param userId - id of selected user
