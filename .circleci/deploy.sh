@@ -3,7 +3,7 @@
 eval `ssh-agent -s`
 cat ~/.ssh/gregor.t_github.pass | setsid -w ssh-add ~/.ssh/gregor.t_github
 
-cd /home/adviceday/app
+cd /home/adviceday/app || exit
 git checkout master
 git pull origin master
 
