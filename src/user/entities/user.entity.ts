@@ -108,13 +108,6 @@ export class User extends BaseEntity {
   adviceHistory: Advice[];
 
   /**
-   * Advices that generates for user
-   */
-  @ManyToMany(() => Advice, (advice) => advice.id)
-  @JoinTable({ name: 'advice_compilation' })
-  adviceCompilation: Advice[];
-
-  /**
    * compare password with its hash stored in user record
    *
    * @param password - user decoded password

@@ -14,7 +14,6 @@ import { User } from '../entities/user.entity';
 import { IsNull, Not } from 'typeorm';
 import { Settings } from '../../settings/entities/settings.entity';
 import { RateService } from '../../rate/services/rate.service';
-import { Advice } from '../../advice/entities/advice.entity';
 
 /**
  * User service
@@ -137,6 +136,7 @@ export class UserService {
 
   /**
    * Fetch all users' ids from db
+   * !!important do not expose to public http api!!
    */
   public async findAllIds(): Promise<string[]> {
     const users = await this.userRepository.find({ select: ['id'] });
@@ -158,21 +158,6 @@ export class UserService {
     }
 
     return user;
-  }
-
-  /**
-   * TODO move to advice service
-   * Returns current advice compilation
-   * for selected user
-   * @param userId - id of selected user
-   */
-  public async getCompilation(userId: string): Promise<Advice[]> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['adviceCompilation'],
-    });
-
-    return user.adviceCompilation;
   }
 
   /**
