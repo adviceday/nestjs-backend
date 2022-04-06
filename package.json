@@ -40,6 +40,7 @@
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "dayjs": "^1.11.0",
     "nestjs-admin": "^0.4.1",
     "onesignal-node": "^3.3.0",
     "passport": "^0.5.2",

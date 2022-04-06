@@ -3,7 +3,6 @@ import { AdviceRepository } from '../repositories/advice.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from '../../user/services/user.service';
 import { Advice } from '../entities/advice.entity';
-import { User } from '../../user/entities/user.entity';
 
 /**
  * Advice service
@@ -115,34 +114,29 @@ export class AdviceService {
   }
 
   /**
-   * Set compilation for user
-   * @param userId - id of user to set compilation
-   * @param advisesIds - ids to fill compilation
+   * Finding all advices in category
+   * and exclude some advices by array of ids
+   * @param categoryId - category to search
+   * @param excludedAdvices - array of ids that don't need to searching
    */
-  public setUserCompilation(
-    userId: string,
-    advisesIds: string[],
-  ): Promise<User> {
-    return this.userService.addManyToMany(
-      userId,
-      'adviceCompilation',
-      advisesIds,
-    );
-  }
-
-  /**
-   * Clear compilation of selected user
-   * @param userId - id of user to set
-   */
-  public async clearUserCompilation(userId: string): Promise<User> {
-    const compilation = await this.userService.getCompilation(userId);
-    const advicesIds = compilation.map((advice) => advice.id);
-
-    return this.userService.removeManyToMany(
-      userId,
-      'adviceCompilation',
-      advicesIds,
-    );
+  public async findByCategory(
+    categoryId: string,
+    excludedAdvices: string[] = [],
+  ): Promise<Advice[]> {
+    let query = this.adviceRepository
+      .createQueryBuilder('advice')
+      .innerJoinAndSelect(
+        'advice.categories',
+        'category',
+        'category.id = :categoryId',
+        { categoryId },
+      );
+    if (excludedAdvices.length) {
+      query = query.where('advice.id not in (:...excludedAdvices)', {
+        excludedAdvices,
+      });
+    }
+    return query.getMany();
   }
 
   /**

@@ -13,8 +13,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { Advice } from './entities/advice.entity';
 import { Translate } from '../lang/decorators/translate.decorator';
-import { UserService } from '../user/services/user.service';
-import { AdviceGeneratorService } from './services/advice-generator.service';
 
 /**
  * @ignore
@@ -22,27 +20,7 @@ import { AdviceGeneratorService } from './services/advice-generator.service';
 @Controller('advice')
 @UseGuards(AuthGuard('jwt-access'))
 export class AdviceController {
-  constructor(
-    private readonly adviceService: AdviceService,
-    private readonly userService: UserService,
-    private readonly adviceGenerator: AdviceGeneratorService,
-  ) {}
-
-  @Post('/trigger-generation')
-  public triggerGeneration() {
-    return this.adviceGenerator.handleCrone();
-  }
-
-  @Get('/get-compilation')
-  @HttpCode(HttpStatus.OK)
-  public async getCompilation(
-    @GetUser('sub') userId: string,
-  ): Promise<Advice[]> {
-    const compilation = await this.userService.getCompilation(userId);
-    await this.adviceService.clearUserCompilation(userId);
-
-    return compilation;
-  }
+  constructor(private readonly adviceService: AdviceService) {}
 
   @Get('/favorites')
   @Translate('array', ['text'])

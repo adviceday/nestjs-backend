@@ -14,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DefaultAdminModule } from 'nestjs-admin';
 import { typeormConfig } from './config/db.config';
 import { HealthModule } from './health/health.module';
+import { CompilationModule } from './compilation/compilation.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { HealthModule } from './health/health.module';
     AdviceModule,
     NotificationsModule,
     HealthModule,
+    CompilationModule,
   ],
 })
 export class AppModule {}
