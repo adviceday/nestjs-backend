@@ -5,6 +5,7 @@ import { Advice } from '../../advice/entities/advice.entity';
 import { Compilation } from '../entities/compilation.entity';
 import { UserService } from '../../user/services/user.service';
 import * as dayjs from 'dayjs';
+import { Between } from 'typeorm';
 
 /**
  * Compilation service for CRUD
@@ -51,6 +52,22 @@ export class CompilationService {
     const compilations = await query.getMany();
 
     return compilations.map((com) => com.advices.map((adv) => adv.id)).flat();
+  }
+
+  /**
+   * Return compilation for today if it's exist
+   * @param userId - id of user that requests compilation
+   */
+  public getToday(userId: string): Promise<Compilation | undefined> {
+    const todayStart = dayjs().format('YYYY-MM-DD');
+    const todayEnd = dayjs().format();
+
+    return this.compilationRepository.findOne({
+      where: {
+        targetUser: userId,
+        createdAt: Between(todayStart, todayEnd),
+      },
+    });
   }
 
   /**

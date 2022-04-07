@@ -1,6 +1,9 @@
 import {
+  BadRequestException,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseUUIDPipe,
@@ -25,13 +28,21 @@ export class CompilationController {
   ) {}
 
   @Get('all')
+  @HttpCode(HttpStatus.OK)
   public getAllCompilations(
     @GetUser('sub') userId: string,
   ): Promise<Compilation[]> {
     return this.compilationService.findAll(userId);
   }
 
+  @Get('today')
+  @HttpCode(HttpStatus.OK)
+  public getToday(@GetUser('sub') userId: string): Promise<Compilation> {
+    return this.compilationService.getToday(userId);
+  }
+
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   public async getCompilation(
     @Param('id', ParseUUIDPipe) compilationId: string,
     @GetUser('sub') userId: string,
@@ -54,8 +65,19 @@ export class CompilationController {
     return compilation;
   }
 
-  @Post('trigger-generation')
-  public triggerGeneration() {
-    return this.compilationGeneratorService.handleCrone();
+  @Post('generate')
+  @HttpCode(HttpStatus.CREATED)
+  public async triggerGeneration(
+    @GetUser('sub') userId: string,
+  ): Promise<Compilation> {
+    const todayCompilation = await this.compilationService.getToday(userId);
+    if (todayCompilation) {
+      throw new BadRequestException(
+        'Compilation for this day is already exist',
+      );
+    }
+
+    const advices = await this.compilationGeneratorService.getAdvices(userId);
+    return this.compilationService.addCompilation(userId, advices);
   }
 }
