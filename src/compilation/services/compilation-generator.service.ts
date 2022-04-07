@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from '../../user/services/user.service';
 import { CategoryService } from '../../category/services/category.service';
 import { NotificationsService } from '../../notifications/services/notifications.service';
@@ -32,8 +31,9 @@ export class CompilationGeneratorService {
   /**
    * Loop through all users
    * generate advices for them and send notifications
+   * @deprecated
    */
-  @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  // @Cron(CronExpression.EVERY_DAY_AT_NOON)
   public async handleCrone() {
     const allUsers = await this.userService.findAllIds();
 
