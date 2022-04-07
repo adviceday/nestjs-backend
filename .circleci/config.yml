@@ -75,13 +75,7 @@ jobs:
       - run:
           name: Ping docs
           command: "npm run health_check:doc"
-      - telegram/notify:
-          message: | 
-            Release finished for << CIRCLE_PROJECT_REPONAME >>
-          telegram-bot-token: TELEGRAM_BOT_TOKEN
-          telegram-chat-id: TELEGRAM_CHAT_ID
-orbs:
-  telegram: woltsu/telegram@0.0.9
+
 workflows:
   deploy:
     jobs:
