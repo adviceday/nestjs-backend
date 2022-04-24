@@ -28,7 +28,7 @@ export class Rate extends BaseEntity {
    * Column to identify rate that
    * need attach to new users
    */
-  @Column()
+  @Column({ type: 'boolean' })
   isDefault: boolean;
 
   /**
