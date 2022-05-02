@@ -37,8 +37,14 @@ export class CompilationController {
 
   @Get('today')
   @HttpCode(HttpStatus.OK)
-  public getToday(@GetUser('sub') userId: string): Promise<Compilation> {
-    return this.compilationService.getToday(userId);
+  public async getToday(@GetUser('sub') userId: string): Promise<Compilation> {
+    const compilation = await this.compilationService.getToday(userId);
+    if (!compilation) {
+      throw new NotFoundException('No compilation found for today');
+    }
+
+    compilation.targetUser.publicView();
+    return compilation;
   }
 
   @Get(':id')

@@ -63,6 +63,8 @@ export class CompilationService {
     const todayEnd = dayjs().format();
 
     return this.compilationRepository.findOne({
+      relations: ['targetUser'],
+      loadRelationIds: { relations: ['advices'] },
       where: {
         targetUser: userId,
         createdAt: Between(todayStart, todayEnd),
