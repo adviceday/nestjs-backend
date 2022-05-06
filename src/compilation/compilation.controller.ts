@@ -43,7 +43,7 @@ export class CompilationController {
       throw new NotFoundException('No compilation found for today');
     }
 
-    compilation.targetUser.publicView();
+    compilation.targetUser = undefined;
     return compilation;
   }
 
@@ -66,7 +66,7 @@ export class CompilationController {
         compilationId,
       );
     }
-    compilation.targetUser.publicView();
+    compilation.targetUser = undefined;
 
     return compilation;
   }
@@ -84,6 +84,12 @@ export class CompilationController {
     }
 
     const advices = await this.compilationGeneratorService.getAdvices(userId);
-    return this.compilationService.addCompilation(userId, advices);
+    const compilation = await this.compilationService.addCompilation(
+      userId,
+      advices,
+    );
+    compilation.targetUser = undefined;
+
+    return compilation;
   }
 }
