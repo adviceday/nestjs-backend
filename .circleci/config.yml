@@ -64,17 +64,6 @@ jobs:
       - run:
           name: Connect to server and run after_deploy script
           command: "ssh $SERVER_USER@$SERVER_IP 'bash -s' < .circleci/after_deploy.sh"
-  after_deploy_checks:
-    docker:
-      - image: circleci/node
-    steps:
-      - checkout
-      - run:
-          name: Pint server
-          command: "npm run health_check"
-      - run:
-          name: Ping docs
-          command: "npm run health_check:doc"
 
 workflows:
   deploy:
@@ -94,7 +83,3 @@ workflows:
                 - master
           requires:
             - lint
-      - after_deploy_checks:
-          requires:
-            - deploy
-            - deploy_docs
