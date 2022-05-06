@@ -43,6 +43,12 @@ export class CompilationController {
       throw new NotFoundException('No compilation found for today');
     }
 
+    if (!compilation.firstFetchedAt) {
+      compilation.firstFetchedAt = await this.compilationService.markFetched(
+        compilation.id,
+      );
+    }
+
     compilation.targetUser = undefined;
     return compilation;
   }
@@ -88,6 +94,11 @@ export class CompilationController {
       userId,
       advices,
     );
+    if (!compilation.firstFetchedAt) {
+      compilation.firstFetchedAt = await this.compilationService.markFetched(
+        compilation.id,
+      );
+    }
     compilation.targetUser = undefined;
 
     return compilation;
