@@ -63,8 +63,7 @@ export class CompilationService {
     const todayEnd = dayjs().format();
 
     return this.compilationRepository.findOne({
-      relations: ['targetUser'],
-      loadRelationIds: { relations: ['advices'] },
+      relations: ['targetUser', 'advices'],
       where: {
         targetUser: userId,
         createdAt: Between(todayStart, todayEnd),
@@ -106,8 +105,7 @@ export class CompilationService {
   ): Promise<Compilation> {
     const user = await this.compilationRepository.findOne({
       where: compilationFields,
-      relations: ['targetUser'],
-      loadRelationIds: { relations: ['advices'] },
+      relations: ['targetUser', 'advices'],
     });
     if (!user) {
       throw new NotFoundException('Compilation is not found');
