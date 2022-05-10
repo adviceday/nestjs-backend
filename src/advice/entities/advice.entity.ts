@@ -14,6 +14,7 @@ import {
 import { lang } from '../../lang/types/lang.type';
 import { AdviceAuthor } from './advice-author.entity';
 import { Category } from '../../category/entities/category.entity';
+import { User } from '../../user/entities/user.entity';
 
 /**
  * Advice entity
@@ -75,4 +76,8 @@ export class Advice extends BaseEntity {
    */
   @RelationId((advice: Advice) => advice.author)
   authorId: string;
+
+  @ManyToMany(() => User, (user) => user.adviceHistory)
+  @JoinTable({ name: 'user_advice_history' })
+  userHistory: User[];
 }

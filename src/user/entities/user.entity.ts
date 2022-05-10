@@ -51,14 +51,14 @@ export class User extends BaseEntity {
   /**
    * User password, but stored in hashed form
    */
-  @Column()
+  @Column({ select: false })
   hashedPassword: string;
 
   /**
    * Hash of refresh token
    * If null user is logged out
    */
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   hashedRefreshToken?: string;
 
   /**
