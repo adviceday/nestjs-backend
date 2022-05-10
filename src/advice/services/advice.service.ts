@@ -74,16 +74,17 @@ export class AdviceService {
    * Returns user history
    * @param userId - id of selected user
    */
-  public getHistory(userId: string): Promise<Advice[]> {
-    return this.adviceRepository.query(
-      `
-          select *
-          from main.public.advice
-                   inner join main.public.user_advice_history ufa on advice.id = ufa."adviceId"
-          where ufa."userId" = $1
-      `,
-      [userId],
-    );
+  public async getHistory(userId: string): Promise<Advice[]> {
+    const query = this.adviceRepository
+      .createQueryBuilder('advice')
+      .innerJoinAndSelect('advice.userHistory', 'user', 'user.id = :userId', {
+        userId,
+      });
+    const res = await query.getMany();
+    return res.map((advice) => {
+      delete advice.userHistory;
+      return advice;
+    });
   }
 
   /**
