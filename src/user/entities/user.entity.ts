@@ -51,14 +51,14 @@ export class User extends BaseEntity {
   /**
    * User password, but stored in hashed form
    */
-  @Column({ select: false })
+  @Column()
   hashedPassword: string;
 
   /**
    * Hash of refresh token
    * If null user is logged out
    */
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   hashedRefreshToken?: string;
 
   /**
@@ -113,6 +113,7 @@ export class User extends BaseEntity {
    * @param password - user decoded password
    */
   public validatePassword(password): Promise<boolean> {
+    console.log(this.hashedPassword);
     return compare(password, this.hashedPassword);
   }
 
