@@ -59,6 +59,16 @@ export class TranslateInterceptor implements NestInterceptor {
         } else if (this.responseType === 'tree') {
           this.iterateTree(res, (obj) => this.setLang(obj, lang));
           return res;
+        } else if (this.responseType === 'array-in-object') {
+          const nestedPath = this.reflector.get(
+            'nestedPath',
+            context.getHandler(),
+          );
+
+          const translatedPath = res[nestedPath].map((obj) =>
+            this.setLang(obj, lang),
+          );
+          return { ...res, [nestedPath]: translatedPath };
         }
       }),
     );

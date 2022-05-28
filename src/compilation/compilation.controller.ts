@@ -15,6 +15,7 @@ import { CompilationService } from './services/compilation.service';
 import { CompilationGeneratorService } from './services/compilation-generator.service';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { Compilation } from './entities/compilation.entity';
+import { Translate } from '../lang/decorators/translate.decorator';
 
 /**
  * @ignore
@@ -54,6 +55,7 @@ export class CompilationController {
   }
 
   @Get(':id')
+  @Translate('array-in-object', ['text'], 'advices')
   @HttpCode(HttpStatus.OK)
   public async getCompilation(
     @Param('id', ParseUUIDPipe) compilationId: string,
